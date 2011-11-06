@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{14770341-4181-46CB-9226-2DDCC96FD18C}</ProjectGuid>
+    <RootNamespace>MainProgram_GUI</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>E:\陈吉宏\我的所有项目\图像处理库\Opencv库\库文件;E:\硕士毕业论文\SuckingPigletsMonitoring\MainProgram_GUI\opencv输出汉字\lib;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <IncludePath>E:\硕士毕业论文\SuckingPigletsMonitoring\MainProgram_GUI\opencv输出汉字\include;$(IncludePath)</IncludePath>
+    <TargetName>PigstyMonitor</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>PigstyMonitor</TargetName>
+    <LibraryPath>E:\陈吉宏\我的所有项目\图像处理库\Opencv库\库文件;E:\硕士毕业论文\SuckingPigletsMonitoring\MainProgram_GUI\opencv输出汉字\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\硕士毕业论文\SuckingPigletsMonitoring\MainProgram_GUI\opencv输出汉字\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>libcmtd.lib;libcmt.lib;msvctrd.lib;msvctr.lib;msvcrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0804</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <IgnoreSpecificDefaultLibraries>libcmtd.lib;libcmt.lib;msvctrd.lib;msvctr.lib;msvcrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0804</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="pig.ico" />
+    <None Include="pig.png" />
+    <None Include="ReadMe.txt" />
+    <None Include="res\btn_cancel.bmp" />
+    <None Include="res\btn_cancel_click.bmp" />
+    <None Include="res\btn_cancel_dis.bmp" />
+    <None Include="res\btn_close.bmp" />
+    <None Include="res\btn_close_click.bmp" />
+    <None Include="res\btn_max.bmp" />
+    <None Include="res\btn_max_click.bmp" />
+    <None Include="res\btn_max_dis.bmp" />
+    <None Include="res\btn_min.bmp" />
+    <None Include="res\btn_min_click.bmp" />
+    <None Include="res\btn_ok.bmp" />
+    <None Include="res\btn_ok_click.bmp" />
+    <None Include="res\btn_ok_dis.bmp" />
+    <None Include="res\btn_openavi.bmp" />
+    <None Include="res\btn_openavi_click.bmp" />
+    <None Include="res\btn_opendvr.bmp" />
+    <None Include="res\btn_opendvr_click.bmp" />
+    <None Include="res\DVR.bmp" />
+    <None Include="res\DVRDis.bmp" />
+    <None Include="res\DVRSel.bmp" />
+    <None Include="res\MainProgram_GUI.ico" />
+    <None Include="res\MainProgram_GUI.rc2" />
+    <None Include="res\pig.ico" />
+    <None Include="res\本地视频.bmp" />
+    <None Include="res\本地视频Dis.bmp" />
+    <None Include="res\本地视频Sel.bmp" />
+    <None Include="res\配置.bmp" />
+    <None Include="res\配置Dis.bmp" />
+    <None Include="res\配置Sel.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\blob.h" />
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobContour.h" />
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobOperators.h" />
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\ComponentLabeling.h" />
+    <ClInclude Include="..\MainProgram\CountedPtr.h" />
+    <ClInclude Include="..\MainProgram\Histogram.h" />
+    <ClInclude Include="..\MainProgram\KalmanBlob.h" />
+    <ClInclude Include="..\MainProgram\MBBTrack.h" />
+    <ClInclude Include="..\MainProgram\PhataBlobContainter.h" />
+    <ClInclude Include="..\MainProgram\PhataTrackBlobs.h" />
+    <ClInclude Include="..\MainProgram\PhataTrackContainter.h" />
+    <ClInclude Include="..\MainProgram\Track.h" />
+    <ClInclude Include="CDialogSK.h" />
+    <ClInclude Include="DlgAnalyse.h" />
+    <ClInclude Include="DlgAppConfig.h" />
+    <ClInclude Include="DlgDVRConfig.h" />
+    <ClInclude Include="FindPigObject.h" />
+    <ClInclude Include="JHCVideo\CameraDS.h" />
+    <ClInclude Include="JHCVideo\DaHua\dhassistant.h" />
+    <ClInclude Include="JHCVideo\DaHua\dhnetsdk.h" />
+    <ClInclude Include="JHCVideo\DaHua\dhplay.h" />
+    <ClInclude Include="JHCVideo\DHDvr.h" />
+    <ClInclude Include="JHCVideo\Filevideo.h" />
+    <ClInclude Include="JHCVideo\Usbvideo.h" />
+    <ClInclude Include="JHCVideo\VideoDevice.h" />
+    <ClInclude Include="cxlog.h" />
+    <ClInclude Include="MainProgram_GUI.h" />
+    <ClInclude Include="MainProgram_GUIDlg.h" />
+    <ClInclude Include="NumericEdit.h" />
+    <ClInclude Include="opencv输出汉字\CvxText.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\blob.cpp" />
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobContour.cpp" />
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobOperators.cpp" />
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\ComponentLabeling.cpp" />
+    <ClCompile Include="..\MainProgram\Histogram.cpp" />
+    <ClCompile Include="..\MainProgram\KalmanBlob.cpp" />
+    <ClCompile Include="..\MainProgram\MBBTrack.cpp" />
+    <ClCompile Include="..\MainProgram\PhataBlobContainter.cpp" />
+    <ClCompile Include="..\MainProgram\PhataTrackBlobs.cpp" />
+    <ClCompile Include="..\MainProgram\PhataTrackContainter.cpp" />
+    <ClCompile Include="..\MainProgram\Track.cpp" />
+    <ClCompile Include="CDialogSK.cpp" />
+    <ClCompile Include="DlgAnalyse.cpp" />
+    <ClCompile Include="DlgAppConfig.cpp" />
+    <ClCompile Include="DlgDVRConfig.cpp" />
+    <ClCompile Include="FindPigObject.cpp" />
+    <ClCompile Include="JHCVideo\CameraDS.cpp" />
+    <ClCompile Include="JHCVideo\DHDvr.cpp" />
+    <ClCompile Include="JHCVideo\Filevideo.cpp" />
+    <ClCompile Include="JHCVideo\Usbvideo.cpp" />
+    <ClCompile Include="JHCVideo\VideoDevice.cpp" />
+    <ClCompile Include="MainProgram_GUI.cpp" />
+    <ClCompile Include="MainProgram_GUIDlg.cpp" />
+    <ClCompile Include="NumericEdit.cpp" />
+    <ClCompile Include="opencv输出汉字\CvxText.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MainProgram_GUI.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="MainProgram_GUI.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

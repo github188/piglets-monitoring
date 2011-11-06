@@ -1,0 +1,2005 @@
+
+                          1  1  1  1  1  1  1  1  1
+                          1                       1
+                          1  2  2  2  2  2  2  2  1
+                          1  2                 2  1
+					      1  2  3  3  3  3  3  2  1
+                          1  2  3           3  2  1
+                          1  2  3  4  4  4  3  2  1
+						  1  2  3  4     4  3  2  1
+						  1	 2	3  4  4  4  3  2  1
+						  1	 2	3           3  2  1
+						  1	 2	3  3  3  3  3  2  1
+						  1	 2                 2  1
+						  1	 2  2  2  2  2  2  2  1
+						  1                       1
+						  1  1  1  1  1  1  1  1  1
+
+
+////截图视频中感兴趣的区域形成新视频
+//#include "..\Public.h"
+//#include   <direct.h>//可得到当前目录
+//int main()
+//{
+//	char   buffer[256]; 
+//	getcwd(buffer,256); //得到当前目录
+//	IplImage *pFrame=0;
+//	CvCapture *cap = 0;
+//	CvVideoWriter *writer=0;
+//	//cvNamedWindow("img");
+//	vector<string> filenames=GetAllFileName("..\\","4*.avi",true);
+//	for (int i=0; i<filenames.size(); ++i)
+//	{
+//		cap = cvCaptureFromFile(filenames.at(i).c_str());
+//		if( !cap )
+//		{
+//			printf("can not open camera or video file\n");
+//			return -1;
+//		}
+//		pFrame = cvQueryFrame(cap);
+//		if(!pFrame)
+//		{
+//			printf("can not read data from the video source\n");
+//			return -1;
+//		}
+//		CvSize size=cvGetSize(pFrame);
+//		CvRect rc=cvRect(0,0,size.width,158);//感兴趣的区域
+//		string savefile=buffer+filenames.at(i).substr(filenames.at(i).find_last_of('\\'),filenames.at(i).length());
+//		remove(savefile.c_str());//删除文件
+//		writer=cvCreateVideoWriter(savefile.c_str(),CV_FOURCC_DEFAULT,25,cvSize(rc.width,rc.height));
+//		if( !writer )
+//		{
+//			printf("can not open writer\n");
+//			return -1;
+//		}
+//		while(pFrame=cvQueryFrame(cap))
+//		{
+//			cvSetImageROI(pFrame,rc);
+//			cvShowImage(filenames.at(i).c_str(),pFrame);
+//			IplImage *roiImg=cvCreateImage(cvSize(rc.width,rc.height),pFrame->depth,pFrame->nChannels);
+//			cvCopyImage(pFrame,roiImg);
+//			cvWriteFrame(writer,roiImg);
+//			cvReleaseImage(&roiImg);
+//			cvResetImageROI(pFrame);
+//			if (27==cvWaitKey(10))
+//			{
+//				break;
+//			}
+//		}
+//		cvReleaseVideoWriter(&writer);
+//		cvReleaseCapture(&cap);
+//		//cvWaitKey(0);
+//	}
+//	cvDestroyAllWindows();
+//	return 0;
+//}
+
+//根据手工截图的栏杆图像（已将栏杆位置手动涂成黑色）生成栏杆掩模
+//#include "..\Public.h"
+//int main( int argc, char** argv )
+//{ 
+//	vector<string> filenames=GetAllFileName(".","*Black.jpg",true);
+//	string markPath;
+//	for (int i=0; i<filenames.size(); ++i)
+//	{
+//		markPath=filenames.at(i);
+//		IplImage *img=cvLoadImage(markPath.c_str(),0);
+//		IplImage *threshMark=cvCreateImage(cvGetSize(img),IPL_DEPTH_8U,1);
+//		cvThreshold(img,threshMark,0,255,CV_THRESH_BINARY_INV);
+//		cvDilate(threshMark,threshMark);
+//		cvErode(threshMark,threshMark);
+//		cvShowImage("img",threshMark);
+//		markPath=markPath.substr(0,markPath.find_last_of('.'))+"Mark.jpg";
+//		cvSaveImage(markPath.c_str(),threshMark);
+//		cvReleaseImage(&img);
+//		cvReleaseImage(&threshMark);
+//	}
+//	return 0;
+//}
+
+/////////由原始图像生成去除栏杆的图像
+//#include "..\Public.h"
+//int main( int argc, char** argv )
+//{ 
+//	vector<string> filenames=GetAllFileName(".","*.avi",true);
+//	string markPath;
+//	for (int i=0; i<filenames.size(); ++i){
+//		markPath=filenames.at(i).substr(filenames.at(i).find_last_of('\\')+1,1)+"BlackMark.jpg";
+//		IplImage *grayMark=cvLoadImage(markPath.c_str(),0);
+//		CvCapture* capture = 0;
+//
+//		capture = cvCaptureFromAVI(filenames.at(i).c_str());
+//		IplImage *pframe=cvQueryFrame(capture);
+//		markPath=filenames.at(i).substr(0,filenames.at(i).find_last_of('.'))+"Inpaint.avi";
+//		remove(markPath.c_str());
+//		CvVideoWriter *writer=cvCreateVideoWriter(markPath.c_str(),CV_FOURCC_DEFAULT ,25,cvGetSize(pframe));
+//
+//		IplImage *ResizeMark=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+//		cvResize(grayMark,ResizeMark);
+//
+//		cvThreshold(ResizeMark,ResizeMark,200,255,CV_THRESH_BINARY);
+//		IplImage*InpaintFrame=cvCloneImage(pframe);
+//		while(pframe=cvQueryFrame(capture))
+//		{
+//			cvInpaint(pframe,ResizeMark,InpaintFrame,3,CV_INPAINT_NS);
+//			cvShowImage("非循环",InpaintFrame);
+//			cvWriteFrame(writer,InpaintFrame);
+//			if(cvWaitKey(2)==27) break;
+//		}
+//		cvReleaseImage(&grayMark);
+//		cvReleaseImage(&InpaintFrame);
+//		cvReleaseImage(&ResizeMark);
+//		cvReleaseCapture(&capture);
+//		cvReleaseVideoWriter(&writer);
+//	}
+//	cvDestroyAllWindows();
+//	return 0;
+//}
+
+///////截图小程序(根据鼠标选择区域截图视频中的感兴趣区域保存为图像：保存于指定目录)
+#include <iostream>
+#include <algorithm>
+using namespace std;
+IplImage *pframe=NULL;//每一帧图像
+CvRect grc;//选择的区域
+bool isDrawing=false;
+string savePath=".\\母猪截图文件\\";
+void on_mouse( int event, int x, int y, int flags, void* frame)
+{
+	IplImage *img=(IplImage*)frame;
+	if( !img )
+		return;
+	IplImage *drawImg=NULL;	
+	switch (event)
+	{
+	case CV_EVENT_LBUTTONDOWN:
+		isDrawing=true;
+		if (x<0) x=0;
+		if (y<0) y=0;
+		if (x>pframe->width) x=pframe->width;
+		if (y>pframe->height)y=pframe->height;
+		grc=cvRect(x,y,0,0);
+		break;
+	case  CV_EVENT_LBUTTONUP:
+		isDrawing=false;
+	
+		if (x<0) x=0;
+		if (y<0) y=0;
+		if (x>pframe->width) x=pframe->width;
+		if (y>pframe->height)y=pframe->height;		
+		grc.width=abs(x-grc.x);
+		grc.height=abs(y-grc.y);		
+		grc.x= grc.x > x ? x : grc.x;
+		grc.y= grc.y > y ? y : grc.y;
+		if (grc.width<3 ||grc.width<3)
+		{
+			return;
+		}
+		drawImg=cvCloneImage(img);
+		cvRectangleR(drawImg,grc,CV_RGB(255,0,0));
+		cvShowImage( "Video", drawImg );
+		{
+			cvSetImageROI(img,grc);
+			IplImage *curImg=cvCreateImage(cvSize(grc.width,grc.height),img->depth,img->nChannels);
+			cvCopyImage(img,curImg);
+			cvShowImage("1",curImg);
+			//保存截图文件
+			vector<string> typefilenames=GetAllFileName(savePath,"*.jpg");
+			vector<string>::const_iterator constit=typefilenames.begin();
+			vector<int> fileNum;
+			for (;constit!=typefilenames.end(); ++constit)//查找目的文件夹已经指定字符图像数量
+			{
+				string name=(*constit);
+				name=name.substr(0,name.find_last_of('.'));
+				int num=atoi(name.c_str());
+				fileNum.push_back(num);
+			}
+			int index=fileNum.empty()? -1 : *max_element(fileNum.begin(),fileNum.end());//从已有编号开始
+			stringstream strstream;
+			strstream<<savePath<<++index<<".jpg";
+			string saveimgname=strstream.str();
+			cvSaveImage(saveimgname.c_str(),curImg);
+			//完成保存截图文件
+			cvResetImageROI(img);
+			cvReleaseImage(&curImg);
+		}
+		cvReleaseImage(&drawImg);
+		break;
+	case  CV_EVENT_MOUSEMOVE:
+		if (isDrawing)
+		{
+			if (x<0) x=0;
+			if (y<0) y=0;
+			if (x>pframe->width) x=pframe->width;
+			if (y>pframe->height)y=pframe->height;
+			grc.width=abs(x-grc.x);
+			grc.height=abs(y-grc.y);
+			CvRect tmpRC=grc;
+			tmpRC.x= tmpRC.x > x ? x : tmpRC.x;
+			tmpRC.y= tmpRC.y > y ? y : tmpRC.y;
+			if (tmpRC.width<3 ||tmpRC.width<3)
+			{
+				return;
+			}
+			drawImg=cvCloneImage(img);
+			cvRectangleR(drawImg,tmpRC,CV_RGB(255,0,0));
+			cvShowImage( "Video", drawImg );
+			cvReleaseImage(&drawImg);
+		}
+		break;
+	default:
+		break;
+	}
+	if(drawImg) cvReleaseImage(&drawImg);
+}
+
+int main( int argc, char** argv )
+{ 
+	if (savePath.at(savePath.length()-1)!='\\')
+	{
+		savePath+='\\';
+	}
+
+	CvCapture* capture = 0;
+	vector<string> filenames=GetAllFileName(".","*.avi",true);
+	cvNamedWindow("Video");
+	for (int i=0; i<filenames.size(); ++i)
+	{
+		capture = cvCaptureFromAVI(filenames.at(i).c_str());
+		pframe=cvQueryFrame(capture);
+		cvLightingCompensation(pframe,pframe);
+		if(!pframe) return -1;
+		cvSetMouseCallback("Video",on_mouse,pframe);
+		if(!capture) return -1;
+		while(pframe=cvQueryFrame(capture))
+		{
+			cvShowImage("Video",pframe);
+			if(cvWaitKey(0)==27) break;
+		}
+		cvReleaseCapture(&capture);
+	}
+	cvDestroyAllWindows();
+	return 0;
+} 
+
+///////统计猪只颜色图像中的Cr与Cb分量的范围
+#include "..\Public.h"
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+bool MaxMinIndex(const double *dvalue,const int num, int &maxIndex,int &minIndex)//查找非零元素下标的最大值与最小值
+{
+	maxIndex=minIndex=0;
+	if (num<1)
+	{
+		return false;
+	}
+	for (int i=0; i<num; ++i)
+	{
+		if(dvalue[i]<1) continue;
+		minIndex=i;
+		break;
+	}
+	for(int i=num-1; i>0; --i)
+	{
+		if(dvalue[i]<1) continue;
+		maxIndex=i;
+		break;
+	}
+	return true;
+}
+int main( int argc, char** argv )
+{ 
+	string ImgPath=".\\截图文件\\";
+	if (ImgPath.at(ImgPath.length()-1)!='\\')
+	{
+		ImgPath+='\\';
+	}
+
+	vector<string> filenames=GetAllFileName(ImgPath,"*.jpg",true);
+	cvNamedWindow("Video");
+	IplImage *pframe=NULL;//每一帧图像
+	int hdims=255;//划分hsit的个数，越高越精确
+	float hrange_arr[]={0,255};
+	float *hranges=hrange_arr;
+
+	string savefilename=ImgPath+"CrCbMinMaxIndex.txt";
+	FILE *file;
+	if (!(file=fopen(savefilename.c_str(),"w")))
+	{
+		return false;
+	}
+	fprintf(file,"Y分量最小值统计信息 Y分量最大值统计信息 Cr分量最小值统计信息 Cr分量最大值统计信息 Cb分量最小值统计信息 Cb分量最大值统计信息\r"); 	//标题
+
+	for (int picIndex=0; picIndex<filenames.size(); ++picIndex)
+	{
+		pframe=cvLoadImage(filenames.at(picIndex).c_str());
+		if(!pframe)continue;
+		IplImage *Y=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+		IplImage *Cr=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+		IplImage *Cb=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+		cvCvtColor(pframe,pframe,CV_BGR2YCrCb);
+		cvSplit(pframe,Y,Cr,Cb,0);
+
+		float min_value=0,max_value=0;
+		int min_index=0,max_index=0;
+		CvHistogram *hisY=cvCreateHist(1,&hdims,CV_HIST_ARRAY,&hranges,1);//计算直方图
+		cvCalcHist(&Y,hisY,0,0);
+
+		CvHistogram *hisCr=cvCreateHist(1,&hdims,CV_HIST_ARRAY,&hranges,1);//计算直方图
+		cvCalcHist(&Cr,hisCr,0,0);
+
+		CvHistogram *hisCb=cvCreateHist(1,&hdims,CV_HIST_ARRAY,&hranges,1);//计算直方图
+		cvCalcHist(&Cb,hisCb,0,0);
+
+		IplImage* histimgY = cvCreateImage( cvSize(320,200), 8, 3 );
+		IplImage* histimgCr = cvCreateImage( cvSize(320,200), 8, 3 );
+		IplImage* histimgCb = cvCreateImage( cvSize(320,200), 8, 3 );
+		cvZero( histimgY );
+		cvZero( histimgCr );
+		cvZero( histimgCb );
+		int bin_w = histimgCr->width / hdims;  // hdims: 条的个数，则 bin_w 为条的宽度
+
+		// 画直方图
+		double dYValue[255],dCrValue[255],dCbValue[255];
+		memset(dYValue ,0,sizeof(double)*255);
+		memset(dCrValue,0,sizeof(double)*255);
+		memset(dCbValue,0,sizeof(double)*255);
+		for( int hdimsIndex = 0; hdimsIndex < hdims; hdimsIndex++ )
+		{
+			dYValue[hdimsIndex]=cvGetReal1D(hisY->bins,hdimsIndex);
+			double valY = ( cvGetReal1D(hisY->bins,hdimsIndex)*histimgY->height/255 );
+			CvScalar color = CV_RGB(0,255,0);
+			cvRectangle( histimgY, cvPoint(hdimsIndex*bin_w,histimgY->height),
+				cvPoint((hdimsIndex+1)*bin_w,(int)(histimgY->height - valY)),
+				color, 1, 8, 0 );
+
+			dCrValue[hdimsIndex]=cvGetReal1D(hisCr->bins,hdimsIndex);
+			double valCr = ( cvGetReal1D(hisCr->bins,hdimsIndex)*histimgCr->height/255 );
+			color = CV_RGB(0,255,0);
+			cvRectangle( histimgCr, cvPoint(hdimsIndex*bin_w,histimgCr->height),
+				cvPoint((hdimsIndex+1)*bin_w,(int)(histimgCr->height - valCr)),
+				color, 1, 8, 0 );
+
+			dCbValue[hdimsIndex]=cvGetReal1D(hisCb->bins,hdimsIndex);
+			double valCb = ( cvGetReal1D(hisCr->bins,hdimsIndex)*histimgCb->height/255 );
+			color = CV_RGB(255,0,0);
+			cvRectangle( histimgCb, cvPoint(hdimsIndex*bin_w,histimgCb->height),
+				cvPoint((hdimsIndex+1)*bin_w,(int)(histimgCb->height - valCb)),
+				color, 1, 8, 0 );
+		}
+		MaxMinIndex(dYValue,hdims,max_index,min_index);
+		cout<<"Y:maxValue "<<max_index<<"  minValue "<<min_index<<endl;
+		fprintf(file,"%d %d ",min_index,max_index); 		
+		MaxMinIndex(dCrValue,hdims,max_index,min_index);
+		cout<<"Cr:maxValue "<<max_index<<"  minValue "<<min_index<<endl;
+		fprintf(file,"%d %d ",min_index,max_index); 		
+		MaxMinIndex(dCbValue,hdims,max_index,min_index);
+		cout<<"Cb:maxValue "<<max_index<<"  minValue "<<min_index<<endl;
+		fprintf(file,"%d %d",min_index,max_index); 	
+		fprintf(file,"\r");
+
+		cvShowImage("Y",histimgY);
+		cvShowImage("Cb",histimgCb);
+		cvShowImage("Cr",histimgCr);
+		cvReleaseImage(&histimgY);
+		cvReleaseImage(&histimgCb);
+		cvReleaseImage(&histimgCr);
+
+		cvCvtColor(pframe,pframe,CV_YCrCb2BGR);
+		cvShowImage("Video",pframe);
+		cvReleaseImage(&pframe);
+		cvReleaseHist(&hisY);
+		cvReleaseHist(&hisCr);
+		cvReleaseHist(&hisCb);
+		if(cvWaitKey(10)==27)
+		{
+			break;
+		}
+	}
+	fclose(file);
+	cvDestroyAllWindows();
+	return 0;
+}
+
+///////统计猪只颜色图像中的Y_Cr与Y_Cb分量的范围
+#include "..\Public.h"
+#include <iostream>
+#include <algorithm>
+#include <map>
+using namespace std;
+int main( int argc, char** argv )
+{ 
+	string ImgPath=".\\母猪截图文件\\";
+	if (ImgPath.at(ImgPath.length()-1)!='\\')
+	{
+		ImgPath+='\\';
+	}
+
+	vector<string> filenames=GetAllFileName(ImgPath,"*.jpg",true);
+	IplImage *pframe=NULL;//每一帧图像
+
+	string savefilename=ImgPath+"Y_CrY_CbMinMaxIndex.txt";
+	FILE *file;
+	if (!(file=fopen(savefilename.c_str(),"w")))
+	{
+		return false;
+	}
+	const int COMPONENT_NUM=3;
+	const int PIEXMAX=256;
+	fprintf(file,"Y分量像素值 其他分量像素值 "); 	//标题
+	for (int i=0; i<COMPONENT_NUM; ++i)
+	{
+		fprintf(file,"%d分量像素个数 ",i,i); 	//标题
+	}
+	fprintf(file,"\r");
+	long Y_All[PIEXMAX][COMPONENT_NUM][PIEXMAX];//Y分量_COMPONENT_NUM_其他分量值
+	memset(Y_All,0,sizeof(long)*PIEXMAX*PIEXMAX*COMPONENT_NUM);
+
+	for (int picIndex=0; picIndex<filenames.size(); ++picIndex)
+	{
+		pframe=cvLoadImage(filenames.at(picIndex).c_str());
+		if(!pframe)continue;
+		IplImage *components[COMPONENT_NUM];
+		for (int i=0; i<COMPONENT_NUM; ++i)
+		{
+			components[i]=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+		}
+		IplImage *grayImg=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+		cvCvtColor(pframe,pframe,CV_BGR2YCrCb);
+		cvSplit(pframe,grayImg,components[0],components[1],0);
+		cvCvtColor(pframe,pframe,CV_YCrCb2BGR);
+
+		cvCvtColor(pframe,pframe,CV_BGR2HSV);
+		cvSplit(pframe,0,components[2],0,0);
+		cvCvtColor(pframe,pframe,CV_HSV2BGR);
+
+
+		int piex=0;
+		for (int i=0; i<pframe->height; ++i){
+			for (int j=0; j<pframe->width; ++j){
+				uchar yIndex=((uchar*)grayImg->imageData+ i*grayImg->widthStep)[j];
+				for (int numIndex=0; numIndex<COMPONENT_NUM; ++numIndex)
+				{
+					piex=((uchar*)components[numIndex]->imageData+ i*components[numIndex]->widthStep)[j];
+					Y_All[yIndex][numIndex][piex]++;
+				}
+			}	
+		}
+		for (int i=0; i<COMPONENT_NUM; ++i)
+		{
+			cvReleaseImage(&components[i]);
+		}
+		cvReleaseImage(&grayImg);
+		cvReleaseImage(&pframe);
+	}
+	vector<int>VcYIndex;
+	for (int yIndex=0; yIndex<PIEXMAX; ++yIndex){
+		for (int piex=0; piex<PIEXMAX; ++piex){
+			long long sumPiex=0;
+			for (int numIndex=0; numIndex<COMPONENT_NUM; ++numIndex){
+				sumPiex+=Y_All[yIndex][numIndex][piex];//求总和
+			}
+
+			if (sumPiex>filenames.size()){//去除小值
+				VcYIndex.push_back(yIndex);
+				fprintf(file,"%d %d ",yIndex,piex);
+				for (int numIndex=0; numIndex<COMPONENT_NUM; ++numIndex){
+					fprintf(file,"%ld ",Y_All[yIndex][numIndex][piex]);
+				}
+				fprintf(file,"\r");	
+			}
+		}
+	}
+	sort( VcYIndex.begin(), VcYIndex.end() );
+	VcYIndex.erase( unique( VcYIndex.begin(), VcYIndex.end() ), VcYIndex.end() );//删除重复值
+
+	//统计最大值，最小值
+	int maxValue=-1,minValue=-1;
+	fprintf(file,"Y分量像素值 CrMin CrMax CbMin CbMax SMin SMax\r");
+	for (int yIndex=0; yIndex<PIEXMAX; ++yIndex){//对于每一个亮度值，都有其相对应的最小值与最大值	
+
+		vector<int> VcTmp[COMPONENT_NUM];
+		for (int numIndex=0; numIndex<COMPONENT_NUM; ++numIndex){
+			for (int piex=0; piex<PIEXMAX; ++piex){			
+					if(Y_All[yIndex][numIndex][piex] > filenames.size()){
+						VcTmp[numIndex].push_back(piex);
+					}
+			}
+		}
+
+		bool isallempty=true;
+		for (int numIndex=0; numIndex<COMPONENT_NUM; ++numIndex){
+			if (!VcTmp[numIndex].empty()){
+				isallempty=false;
+				break;
+			}
+		}
+
+		if (isallempty){
+			continue;
+		}else{
+			fprintf(file,"%d ",yIndex);
+			for (int numIndex=0; numIndex<COMPONENT_NUM; ++numIndex){
+				if (VcTmp[numIndex].empty()){
+					maxValue=minValue=-1;
+				}else{
+					maxValue=*max_element(VcTmp[numIndex].begin(), VcTmp[numIndex].end()); 
+					minValue=*min_element(VcTmp[numIndex].begin(), VcTmp[numIndex].end()); 
+				}
+				fprintf(file,"%d %d ",minValue,maxValue);
+			}
+			fprintf(file,"\r");	
+		}
+	}
+	fclose(file);
+	return 0;
+}
+
+///////统计猪只颜色图像中的Cr/Cb分量的椭圆范围（得到椭圆范围）
+#include "..\Public.h"
+#include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <map>
+using namespace std;
+int main( int argc, char** argv )
+{ 
+	string ImgPath=".\\母猪截图文件\\";
+	if (ImgPath.at(ImgPath.length()-1)!='\\')
+	{
+		ImgPath+='\\';
+	}
+	vector<string> filenames=GetAllFileName(ImgPath,"*.jpg",true);
+	IplImage *pframe=NULL;//每一帧图像
+	CvMat* staticMat= cvCreateMat(256,256,CV_64FC1);
+	cvSetZero(staticMat);
+
+	int   step  = staticMat->step/sizeof(double);
+	double *pMatdata = staticMat->data.db;
+	CvFont font;
+	cvInitFont( &font, CV_FONT_HERSHEY_PLAIN,1, 1, 0, 1, CV_AA );
+	const int COMPONENT_NUM=2;
+	for (int picIndex=0; picIndex<filenames.size(); ++picIndex)
+	{
+		pframe=cvLoadImage(filenames.at(picIndex).c_str());
+		if(!pframe)continue;
+		IplImage *components[COMPONENT_NUM];
+		for (int i=0; i<COMPONENT_NUM; ++i)
+		{
+			components[i]=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+		}
+		cvCvtColor(pframe,pframe,CV_BGR2YCrCb);
+		cvSplit(pframe,0,components[0],components[1],0);
+		cvReleaseImage(&pframe);
+
+		for (int i=0; i<components[0]->height; ++i){
+			for (int j=0; j<components[0]->width; ++j){
+					int cr=((uchar*)components[0]->imageData+ i*components[0]->widthStep)[j];
+					int cb=((uchar*)components[1]->imageData+ i*components[1]->widthStep)[j];
+					(pMatdata+cr*step)[cb]+=1;
+			}	
+		}
+		for (int i=0; i<COMPONENT_NUM; ++i)
+		{
+			cvReleaseImage(&components[i]);
+		}
+	}
+
+	FILE *file;
+	if (!(file=fopen(".\\母猪截图文件\\CbCr平面参数.txt","w")))
+	{
+		return false;
+	}
+	double dmaxPiex=0;
+	for (int i=255; i>=0; --i){//图像坐标轴为左下，所以改为左上		
+		for (int j=0; j<=255; ++j){
+			double& dTmp=(pMatdata+i*step)[j];
+			dTmp=(dTmp<(filenames.size()*0.5)) ? 0 : dTmp;
+			dmaxPiex=dTmp > dmaxPiex ? dTmp : dmaxPiex;
+			fprintf(file,"%f  ",dTmp);
+		}
+		fprintf(file,"\r");	
+	}
+	fclose(file);
+
+	IplImage *grayImg=cvCreateImage(cvSize(256,256),IPL_DEPTH_8U,1);
+	cvConvertScale(staticMat,grayImg,255/dmaxPiex,0);
+	cvThreshold(grayImg,grayImg,0,255,CV_THRESH_BINARY);
+	CvRect minRect=GetMinRect(grayImg);
+	cout<<"Cb分量最小值："<<minRect.x<<"  Cb分量最大值："<<minRect.width+minRect.x<<endl
+		<<"Cr分量最小值："<<minRect.y<<"  Cr分量最大值："<<minRect.height+minRect.y<<endl;
+	if (minRect.width*minRect.height>0)//范围不为空
+	{
+		IplImage *cutImg=cvCreateImage(cvSize(minRect.width,minRect.height),IPL_DEPTH_8U,1);
+		cvSetImageROI(grayImg,minRect);
+		cvCopyImage(grayImg,cutImg);
+		cvResetImageROI(grayImg);
+
+		IplImage *ResizeImg=cvCreateImage(cvSize(256,256),IPL_DEPTH_8U,1);
+		cvResize(cutImg,ResizeImg);
+		cvThreshold(ResizeImg,ResizeImg,1,255,CV_THRESH_BINARY);
+
+		IplImage *axesImg=cvCreateImage(cvSize(320,320),IPL_DEPTH_8U,1);
+		cvSet(axesImg,cvScalarAll(0));
+		cvFlip(ResizeImg,0,0);//沿x轴翻转
+		cvSetImageROI(axesImg,cvRect(40,40,256,256));
+		cvCopyImage(ResizeImg,axesImg);
+		cvResetImageROI(axesImg);
+
+		IplImage *showImg=cvCreateImage(cvGetSize(axesImg),IPL_DEPTH_8U,3);
+		CvMemStorage *storage=cvCreateMemStorage(0);
+		CvSeq *maxcontour=GetMaxContour(axesImg,storage);
+		cvSubRS(axesImg,cvScalarAll(255),axesImg);//反转黑白，现在底色为白
+		cvCvtColor(axesImg,showImg,CV_GRAY2BGR);
+		DrawMinAreaEllipse(showImg,maxcontour);
+		cvReleaseMemStorage(&storage);
+
+		cvSaveImage("水平翻转后的CrCb平面图.jpg",showImg);
+		cvShowImage("椭圆拟合图",showImg);
+		cvShowImage("放大椭圆拟合图",ResizeImg);
+		cvWaitKey(0);
+		cvReleaseImage(&cutImg);
+		cvReleaseImage(&showImg);
+		cvReleaseImage(&ResizeImg);
+		cvReleaseImage(&axesImg);
+	}
+	cvReleaseImage(&grayImg);
+	cvReleaseMat(&staticMat);
+	cvDestroyAllWindows();
+	return 0;
+}
+
+//////////////////根据查找表识别母猪（四种查找表对比）
+#include <sstream>
+using namespace std;
+//table查找表，rows查找表行数,cols查找表列数,usecols所使用到的列数，不能大于cols
+//pframe的大小为(usecols+1)/2，pframe[0]为主分量，pframe[1]...pframe[(usecols+1)/2]为辅分量
+//
+void cvLookUpTable(int *table,const int Rows,const int Cols,const int usecols,IplImage** pframe, IplImage* mask){
+	assert(Cols>=usecols);
+	const int IMGNUM=(usecols-1)/2;
+	IplImage **imgs=new IplImage*[IMGNUM];
+	IplImage *grayImg=pframe[0];
+	IplImage *img=grayImg;
+	for (int i=0; i<IMGNUM; ++i)
+	{
+		imgs[i] =pframe[i+1];
+	}
+	cvSetZero(mask);
+	int *param=new int[usecols-1];
+	int *componPiex=new int[IMGNUM];
+	for (int i=0; i<img->height; ++i){
+		for (int j=0; j<img->width; ++j){
+			uchar grayPiex=((unsigned char *)grayImg->imageData+ i* grayImg->widthStep)[j];
+			for (int m=0; m<Rows; ++m)
+			{
+				if (grayPiex==table[m*Cols+0])
+				{
+					for (int n=0; n<usecols-1; ++n)
+					{
+						param[n]=table[m*Cols+n+1];
+					}
+					for (int imgnumIndex=0; imgnumIndex<IMGNUM; ++imgnumIndex){
+						componPiex[imgnumIndex]=((unsigned char *)imgs[imgnumIndex]->imageData+ i* imgs[imgnumIndex]->widthStep)[j];
+					}
+					bool isObjectPiex=true;
+					for (int n=0; n<IMGNUM; ++n)
+					{
+						if (!(componPiex[n]>=param[n*2] && componPiex[n] <=param[n*2+1])){
+							isObjectPiex=false;
+							break;
+						}
+					}
+					if (isObjectPiex==true)
+					{
+						((unsigned char *)mask->imageData+ i* mask->widthStep)[j]=255;
+					}
+					break;//for (int m=0; m<Rows; ++m)
+				}
+				
+			}
+		}
+	}
+	if (imgs){
+		delete[] imgs;
+		imgs=NULL;
+	}
+	if (componPiex){
+		delete[] componPiex;
+		componPiex=NULL;
+	}
+	if(param) {
+		delete []param;
+		param=NULL;
+	}
+}
+bool CreateLUT(string LUTPath,int **table,int &row, int &col)
+{
+	FILE *file=0;
+	if (!(file=fopen(LUTPath.c_str(),"r")))
+	{
+		return false;
+	}
+	fscanf(file,"%d %d",&row,&col);
+	*table=new int[row*col];
+	for (int i=0; i<row; ++i){
+		for (int j=0; j<col; ++j){		
+			float tmp;
+			fscanf(file,"%f",&tmp);
+			(*table)[i*col+j]=tmp;
+		}
+	}
+	fclose(file);
+	return true;
+}
+void ReleaseLUT(int **table)
+{
+	if(!table) return;
+	if (*table)
+	{
+		int *tmpTable=*table;
+		*table=0;
+		delete []tmpTable;
+	}
+}
+//调用如下
+int main( int argc, char** argv )
+{ 
+	string ImgPath=".\\母猪截图文件\\";
+	if (ImgPath.at(ImgPath.length()-1)!='\\')
+	{
+		ImgPath+='\\';
+	}
+
+	string LUPName[4];
+	LUPName[0]=ImgPath+"母猪Y_CrCbSMinMaxIndex查找表.dat";
+	LUPName[1]=ImgPath+"母猪Cr_YCbSMinMaxIndex查找表.dat";
+	LUPName[2]=ImgPath+"母猪Cb_YCrSMinMaxIndex查找表.dat";
+	LUPName[3]=ImgPath+"母猪S_YCrCbMinMaxIndex查找表.dat";
+	int row[4],col[4];
+	int *table[4]={0};
+		CvCapture* capture = 0;
+	for (int i=0; i<4; ++i)
+	{
+		CreateLUT(LUPName[i],&table[i],row[i],col[i]);
+	}
+	capture = cvCaptureFromAVI(gVOneWander.c_str());
+	if (!capture)
+	{
+		return -1;
+	}
+	IplImage *pframe=cvQueryFrame(capture);
+	IplImage*mask=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	IplImage*maxmask=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	CvMemStorage *storage=cvCreateMemStorage();
+	while(pframe=cvQueryFrame(capture))
+	{
+		cvLightingCompensation(pframe,pframe);
+
+		IplImage *tmpImg = cvCreateImage(cvSize(pframe->width, pframe->height), pframe->depth, pframe->nChannels);
+		IplImage *imgs[4];
+		for(int i=0; i<4; ++i)
+		{
+			imgs[i]= cvCreateImage(cvSize(pframe->width, pframe->height), pframe->depth, 1);
+		}
+
+		cvCvtColor(pframe,tmpImg,CV_BGR2YCrCb);
+		cvSplit(tmpImg,imgs[0], imgs[1], imgs[2], 0);
+		cvCvtColor(pframe,tmpImg,CV_BGR2HSV);
+		cvSplit(tmpImg, 0, imgs[3], 0, 0);	
+		cvReleaseImage(&tmpImg);
+
+		for (int i=0; i<4; ++i)
+		{
+			IplImage *tmpSwapImg=0;
+			CV_SWAP(imgs[0],imgs[i],tmpSwapImg);			
+			cvLookUpTable(table[i],row[i],col[i],5,imgs,mask);
+			cvDilate(mask,mask);
+			cvErode(mask,mask);
+			cvDilate(mask,mask,0,1);	
+			cvSetZero(maxmask);
+			cvClearMemStorage(storage);
+			CvSeq *contour=GetMaxContour(mask,storage);
+			cvDrawContours(maxmask,contour,cvScalarAll(255),cvScalarAll(255),-1,CV_FILLED, 8 );
+			//DrawMinAreaRect(pframe,contour);
+			stringstream str;
+			str<<"video"<<i;
+			cvShowImage(str.str().c_str(),maxmask);
+			if(cvWaitKey(10)==27) break;
+		}
+		for(int i=0; i<4; ++i)
+		{
+			cvReleaseImage(&imgs[i]);
+		}	
+		cvShowImage("原图像",pframe);
+	}
+	cvReleaseImage(&mask);
+	cvReleaseImage(&maxmask);
+	cvReleaseMemStorage(&storage);
+	cvReleaseCapture(&capture);
+	cvDestroyAllWindows();
+	for (int i=0; i<4; ++i)
+	{
+		ReleaseLUT(&table[i]);
+	}
+	return 0;
+}
+
+//////////////椭圆法与查找表法对比
+#include "..\\Public.h"
+#include <sstream>
+using namespace std;
+//table查找表，rows查找表行数,cols查找表列数,usecols所使用到的列数，不能大于cols
+//pframe的大小为(usecols+1)/2，pframe[0]为主分量，pframe[1]...pframe[(usecols+1)/2]为辅分量
+//根据查找表检测猪只
+void cvLookUpTable(int *table,const int Rows,const int Cols,const int usecols,IplImage** pframe, IplImage* mask){
+	assert(Cols>=usecols);
+	const int IMGNUM=(usecols-1)/2;
+	IplImage **imgs=new IplImage*[IMGNUM];
+	IplImage *grayImg=pframe[0];
+	IplImage *img=grayImg;
+	for (int i=0; i<IMGNUM; ++i)
+	{
+		imgs[i] =pframe[i+1];
+	}
+	cvSetZero(mask);
+	int *param=new int[usecols-1];
+	int *componPiex=new int[IMGNUM];
+	for (int i=0; i<img->height; ++i){
+		for (int j=0; j<img->width; ++j){
+			uchar grayPiex=((unsigned char *)grayImg->imageData+ i* grayImg->widthStep)[j];
+			for (int m=0; m<Rows; ++m)
+			{
+				if (grayPiex==table[m*Cols+0])
+				{
+					for (int n=0; n<usecols-1; ++n)
+					{
+						param[n]=table[m*Cols+n+1];
+					}
+					for (int imgnumIndex=0; imgnumIndex<IMGNUM; ++imgnumIndex){
+						componPiex[imgnumIndex]=((unsigned char *)imgs[imgnumIndex]->imageData+ i* imgs[imgnumIndex]->widthStep)[j];
+					}
+					bool isObjectPiex=true;
+					for (int n=0; n<IMGNUM; ++n)
+					{
+						if (!(componPiex[n]>=param[n*2] && componPiex[n] <=param[n*2+1])){
+							isObjectPiex=false;
+							break;
+						}
+					}
+					if (isObjectPiex==true)
+					{
+						((unsigned char *)mask->imageData+ i* mask->widthStep)[j]=255;
+					}
+					break;//for (int m=0; m<Rows; ++m)
+				}
+				
+			}
+		}
+	}
+	if (imgs){
+		delete[] imgs;
+		imgs=NULL;
+	}
+	if (componPiex){
+		delete[] componPiex;
+		componPiex=NULL;
+	}
+	if(param) {
+		delete []param;
+		param=NULL;
+	}
+}
+bool CreateLUT(string LUTPath,int **table,int &row, int &col)
+{
+	FILE *file=0;
+	if (!(file=fopen(LUTPath.c_str(),"r")))
+	{
+		return false;
+	}
+	fscanf(file,"%d %d",&row,&col);
+	*table=new int[row*col];
+	for (int i=0; i<row; ++i){
+		for (int j=0; j<col; ++j){		
+			float tmp;
+			fscanf(file,"%f",&tmp);
+			(*table)[i*col+j]=tmp;
+		}
+	}
+	fclose(file);
+	return true;
+}
+void ReleaseLUT(int **table)
+{
+	if(!table) return;
+	if (*table)
+	{
+		int *tmpTable=*table;
+		*table=0;
+		delete []tmpTable;
+	}
+}
+//根据CbCr的椭圆范围检测猪只
+//pfrmae--当前帧图像
+//mask--检测到的猪只图像（黑白图像）
+//box--椭圆范围
+void cvCbCrEllipse(IplImage *pframe, IplImage *mask)
+{
+	if (!pframe || !mask || pframe->width!=mask->width || pframe->height!=mask->height ||
+		pframe->nChannels!=3 || mask->nChannels!=1)
+	{
+		return;
+	}
+	cvSetZero(mask);
+	IplImage *YCrCb=cvCreateImage(cvGetSize(pframe),pframe->depth,pframe->nChannels);
+	cvCvtColor(pframe,YCrCb,CV_BGR2YCrCb);
+	IplImage *Y=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	IplImage *Cr=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	IplImage *Cb=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	cvSplit(YCrCb,Y,Cr,Cb,0);
+	CvBox2D box;
+	box.angle=-(180-131.516);
+	box.center.x=157.843;
+	box.center.y=183.575;
+	box.size.height=168.184;
+	box.size.width=313.443;
+
+	float x=0,y=0;
+	while(box.angle<0)
+		box.angle+=360;
+	while(box.angle>360)
+		box.angle-=360;
+
+	int angle=cvRound(box.angle);
+	float sinval,cosval;
+	sincos(angle,sinval,cosval);
+	float fwidth = box.size.width*0.5;
+	float fheight =box.size.height*0.5;
+	for (int i=0; i<pframe->height; ++i)
+	{
+		for (int j=0; j<pframe->width; ++j)
+		{
+			uchar YPiex=((uchar*)Y->imageData + i * Y->widthStep)[j];
+			uchar CrPiex=((uchar*)Cr->imageData + i* Cr->widthStep)[j];
+			uchar CbPiex=((uchar*)Cb->imageData + i * Cb->widthStep)[j];
+			x=cosval*CbPiex+sinval*CrPiex+box.center.x;
+			y=cosval*CrPiex-sinval*CbPiex+box.center.y;
+			//x=cosval*CbPiex-sinval*CrPiex-box.center.x;
+			//y=cosval*CrPiex+sinval*CbPiex-box.center.y;
+			if ((x*x)/(fwidth*fwidth) + (y*y)/(fheight*fheight) <=1 && (YPiex>120))
+			{
+				((uchar*)mask->imageData + i * mask->widthStep)[j]=255;
+			}else{
+				((uchar*)mask->imageData + i * mask->widthStep)[j]=0;
+			}			
+		}
+	}
+	cvReleaseImage(&YCrCb);
+	cvReleaseImage(&Y);
+	cvReleaseImage(&Cr);
+	cvReleaseImage(&Cb);
+}
+//调用如下
+int main( int argc, char** argv )
+{ 
+	string ImgPath=".\\母猪截图文件\\";
+	if (ImgPath.at(ImgPath.length()-1)!='\\')
+	{
+		ImgPath+='\\';
+	}
+
+	string LUPName;
+	LUPName=ImgPath+"母猪Y_CrCbSMinMaxIndex查找表.dat";
+	int row,col;
+	int *table=0;
+	CvCapture* capture = 0;
+
+	CreateLUT(LUPName,&table,row,col);
+	capture = cvCaptureFromAVI(gVRun.c_str());
+	if (!capture)
+	{
+		return -1;
+	}
+	IplImage *pframe=cvQueryFrame(capture);
+	IplImage*mask=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	IplImage*maxmask=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	CvMemStorage *storage=cvCreateMemStorage();
+	pframe=cvQueryFrame(capture);
+	IplImage *tmpImg = cvCreateImage(cvSize(pframe->width, pframe->height), pframe->depth, pframe->nChannels);
+	IplImage *imgs[4];
+	for(int i=0; i<4; ++i)
+	{
+		imgs[i]= cvCreateImage(cvSize(pframe->width, pframe->height), pframe->depth, 1);
+	}
+	while(pframe=cvQueryFrame(capture))
+	{
+		cvLightingCompensation(pframe,pframe);
+		cvCvtColor(pframe,tmpImg,CV_BGR2YCrCb);
+		cvSplit(tmpImg,imgs[0], imgs[1], imgs[2], 0);
+		cvCvtColor(pframe,tmpImg,CV_BGR2HSV);
+		cvSplit(tmpImg, 0, imgs[3], 0, 0);	
+
+		cvLookUpTable(table,row,col,5,imgs,mask);
+		cvShowImage("原始查找表法",mask);
+		cvSaveImage("原始查找表法.jpg",mask);
+		cvDilate(mask,mask);
+		cvErode(mask,mask);
+		cvDilate(mask,mask,0,1);	
+		cvSetZero(maxmask);
+		cvClearMemStorage(storage);
+		CvSeq *contour=GetMaxContour(mask,storage);
+		cvDrawContours(maxmask,contour,cvScalarAll(255),cvScalarAll(255),-1,CV_FILLED, 8 );
+		//DrawMinAreaRect(pframe,contour);
+		cvShowImage("去噪后查找表法",maxmask);
+		cvSaveImage("去噪后查找表法.jpg",maxmask);
+
+		cvCbCrEllipse(pframe,mask);		
+		cvShowImage("原始CbCr椭圆法",mask);
+		cvSaveImage("原始CbCr椭圆法.jpg",mask);
+		cvErode(mask,mask);
+		cvDilate(mask,mask);
+		cvDilate(mask,mask,0,1);
+		cvSetZero(maxmask);
+		cvClearMemStorage(storage);
+		contour=GetMaxContour(mask,storage);
+		cvDrawContours(maxmask,contour,cvScalarAll(255),cvScalarAll(255),-1,CV_FILLED, 8 );
+		//DrawMinAreaRect(pframe,contour);
+		cvShowImage("去噪后CbCr椭圆法",maxmask);
+		cvSaveImage("去噪后CbCr椭圆法.jpg",maxmask);
+
+		cvShowImage("原图像",pframe);
+		cvSaveImage("原图像.jpg",pframe);
+		if(cvWaitKey(10)==27) break;
+	}
+	for(int i=0; i<4; ++i)
+	{
+		cvReleaseImage(&imgs[i]);
+	}	
+	cvReleaseImage(&tmpImg);
+	cvReleaseImage(&mask);
+	cvReleaseImage(&maxmask);
+	cvReleaseMemStorage(&storage);
+	cvReleaseCapture(&capture);
+	cvDestroyAllWindows();
+	ReleaseLUT(&table);
+	return 0;
+}
+
+///////////////////////本文的猪只检测方法（GMM检测仔猪，查找表法检测母猪）
+#include "..\\Public.h"
+#include <sstream>
+using namespace std;
+
+//table查找表，rows查找表行数,cols查找表列数,usecols所使用到的列数，不能大于cols
+//pframe的大小为(usecols+1)/2，pframe[0]为主分量，pframe[1]...pframe[(usecols+1)/2]为辅分量
+//根据查找表检测猪只
+void cvLookUpTable(int *table,const int Rows,const int Cols,const int usecols,IplImage** pframe, IplImage* mask){
+	assert(Cols>=usecols);
+	const int IMGNUM=(usecols-1)/2;
+	IplImage **imgs=new IplImage*[IMGNUM];
+	IplImage *grayImg=pframe[0];
+	IplImage *img=grayImg;
+	for (int i=0; i<IMGNUM; ++i)
+	{
+		imgs[i] =pframe[i+1];
+	}
+	cvSetZero(mask);
+	int *param=new int[usecols-1];
+	int *componPiex=new int[IMGNUM];
+	for (int i=0; i<img->height; ++i){
+		for (int j=0; j<img->width; ++j){
+			uchar grayPiex=((unsigned char *)grayImg->imageData+ i* grayImg->widthStep)[j];
+			for (int m=0; m<Rows; ++m)
+			{
+				if (grayPiex==table[m*Cols+0])
+				{
+					for (int n=0; n<usecols-1; ++n)
+					{
+						param[n]=table[m*Cols+n+1];
+					}
+					for (int imgnumIndex=0; imgnumIndex<IMGNUM; ++imgnumIndex){
+						componPiex[imgnumIndex]=((unsigned char *)imgs[imgnumIndex]->imageData+ i* imgs[imgnumIndex]->widthStep)[j];
+					}
+					bool isObjectPiex=true;
+					for (int n=0; n<IMGNUM; ++n)
+					{
+						if (!(componPiex[n]>param[n*2] && componPiex[n] <param[n*2+1])){
+							isObjectPiex=false;
+							break;
+						}
+					}
+					if (isObjectPiex==true)
+					{
+						((unsigned char *)mask->imageData+ i* mask->widthStep)[j]=255;
+					}
+					break;//for (int m=0; m<Rows; ++m)
+				}				
+			}
+		}
+	}
+	if (imgs){
+		delete[] imgs;
+		imgs=NULL;
+	}
+	if (componPiex){
+		delete[] componPiex;
+		componPiex=NULL;
+	}
+	if(param) {
+		delete []param;
+		param=NULL;
+	}
+}
+bool CreateLUT(string LUTPath,int **table,int &row, int &col)
+{
+	FILE *file=0;
+	if (!(file=fopen(LUTPath.c_str(),"r")))
+	{
+		return false;
+	}
+	fscanf(file,"%d %d",&row,&col);
+	*table=new int[row*col];
+	for (int i=0; i<row; ++i){
+		for (int j=0; j<col; ++j){		
+			float tmp;
+			fscanf(file,"%f",&tmp);
+			(*table)[i*col+j]=tmp;
+		}
+	}
+	fclose(file);
+	return true;
+}
+void ReleaseLUT(int **table)
+{
+	if(!table) return;
+	if (*table)
+	{
+		int *tmpTable=*table;
+		*table=0;
+		delete []tmpTable;
+	}
+}
+//调用如下
+int main( int argc, char** argv )
+{ 
+	string ImgPath="E:\\硕士毕业论文\\SuckingPigletsMonitoring\\ConsoleTest\\母猪截图文件\\";
+	if (ImgPath.at(ImgPath.length()-1)!='\\')
+	{
+		ImgPath+='\\';
+	}
+
+	string LUPName;
+	LUPName=ImgPath+"母猪Y_CrCbSMinMaxIndex查找表.dat";
+	int row,col;
+	int *table=0;
+	CvCapture* capture = 0;
+
+	CreateLUT(LUPName,&table,row,col);
+	capture = cvCaptureFromAVI(gVRun.c_str());
+	if (!capture)
+	{
+		return -1;
+	}
+	CvGaussBGStatModelParams params;
+	params.win_size      = CV_BGFG_MOG_WINDOW_SIZE*4;
+	params.bg_threshold  = CV_BGFG_MOG_BACKGROUND_THRESHOLD;
+	params.std_threshold = CV_BGFG_MOG_STD_THRESHOLD;
+	params.weight_init   = CV_BGFG_MOG_WEIGHT_INIT;
+	params.variance_init = CV_BGFG_MOG_SIGMA_INIT*CV_BGFG_MOG_SIGMA_INIT;
+	params.minArea       = CV_BGFG_MOG_MINAREA;
+	params.n_gauss       = CV_BGFG_MOG_NGAUSSIANS;
+
+
+	IplImage *pframe=cvQueryFrame(capture);
+	CvGaussBGModel *m_bg_model = (CvGaussBGModel*)cvCreateGaussianBGModel(pframe,&params );
+
+	IplImage*mask=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	IplImage*dstmask=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	CvMemStorage *storage=cvCreateMemStorage();
+	pframe=cvQueryFrame(capture);
+	IplImage *tmpImg = cvCreateImage(cvSize(pframe->width, pframe->height), pframe->depth, pframe->nChannels);
+	IplImage *imgs[4];
+	for(int i=0; i<4; ++i)
+	{
+		imgs[i]= cvCreateImage(cvSize(pframe->width, pframe->height), pframe->depth, 1);
+	}
+	while(pframe=cvQueryFrame(capture))
+	{
+		//cvLightingCompensation(pframe,pframe);
+		cvSetZero(dstmask);
+		cvSaveImage("原图像.jpg",pframe);
+		cvCvtColor(pframe,tmpImg,CV_BGR2YCrCb);
+		cvSplit(tmpImg,imgs[0], imgs[1], imgs[2], 0);
+		cvCvtColor(pframe,tmpImg,CV_BGR2HSV);
+		cvSplit(tmpImg, 0, imgs[3], 0, 0);	
+		cvCvtColor(tmpImg,tmpImg,CV_HSV2BGR);
+
+		cvLookUpTable(table,row,col,7,imgs,mask);
+		cvShowImage("原始查找表法",mask);
+		cvSaveImage("原始查找表法.jpg",mask);
+		cvDilate(mask,mask);
+		cvErode(mask,mask);
+		cvDilate(mask,mask,0,1);	
+		cvClearMemStorage(storage);
+		CvSeq *contour=GetMaxContour(mask,storage);
+		if (!contour){
+			break;
+		}
+		CvRect maxcontourRc=((CvContour*)contour)->rect;
+		DrawMinAreaRect(tmpImg,contour);
+		cvDrawContours( dstmask, contour, cvScalarAll(255), cvScalarAll(255), -1, CV_FILLED, 8 );
+		cvShowImage("去噪后查找表法",mask);
+		cvSaveImage("去噪后查找表法.jpg",mask);
+
+		cvUpdateBGStatModel( pframe,(CvBGStatModel *)m_bg_model, -1.0 );
+		cvShowImage("原始高斯法",m_bg_model->foreground);
+		cvSaveImage("原始高斯法.jpg",m_bg_model->foreground);
+		cvCopy(m_bg_model->foreground,mask);
+		cvErode(mask,mask);
+		cvDilate(mask,mask);
+		cvShowImage("去噪后的高斯法",mask);
+		cvSaveImage("去噪后的高斯法.jpg",mask);
+
+		double dMaxArea=0;
+		cvClearMemStorage(storage);
+		cvFindContours( mask, storage, &contour, sizeof(CvContour), CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE );
+		for( ; contour != 0; contour = contour->h_next )
+		{
+			CvRect rc=((CvContour*)contour)->rect;
+			if(!CommonArea(rc,maxcontourRc,0.3) && rc.width*rc.height>mask->imageSize*0.008)
+			{
+				DrawMinAreaRect(tmpImg,contour);
+				cvDrawContours( dstmask, contour, cvScalarAll(255), cvScalarAll(255), -1, CV_FILLED, 8 );
+			}
+		}
+
+		cvShowImage("原图像-标志结果",tmpImg);
+		cvSaveImage("原图像-标志结果.jpg",tmpImg);
+		cvShowImage("猪只检测算法-二值化结果",dstmask);
+		cvSaveImage("猪只检测算法-二值化结果.jpg",dstmask);
+		if(cvWaitKey(10)==27) break;
+	}
+	for(int i=0; i<4; ++i)
+	{
+		cvReleaseImage(&imgs[i]);
+	}	
+	cvReleaseBGStatModel((CvBGStatModel**)&m_bg_model);
+	cvReleaseImage(&tmpImg);
+	cvReleaseImage(&mask);
+	cvReleaseImage(&dstmask);
+	cvReleaseMemStorage(&storage);
+	cvReleaseCapture(&capture);
+	cvDestroyAllWindows();
+	ReleaseLUT(&table);
+	return 0;
+}
+
+///////////////////////本文的方法与三种常用的运动目标检测方法（背景差分法、混合高斯背景建模法、光流法）的对比
+#include "E:\硕士毕业论文\SuckingPigletsMonitoring\GaussBG\BackGroundModel.h"
+#include "E:\硕士毕业论文\SuckingPigletsMonitoring\MainProgram_GUI\FindPigObject.h"
+#pragma warning(disable:4996)
+#include <cxcore.h>
+#include <cv.h>
+#include <highgui.h>
+#include <cvaux.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <list>
+#include <queue>
+#include <map>
+#include <io.h>
+using namespace std;
+#if CV_MAJOR_VERSION==2 && CV_MINOR_VERSION==1
+#ifdef _DEBUG
+#pragma comment(lib,"ipcommd.lib")
+#pragma comment(lib,"ipstddatad.lib")
+#pragma comment(lib,"ipguid.lib")
+#pragma comment(lib,"ipalgod.lib")
+#pragma comment(lib,"iplearnd.lib")
+#else
+#pragma comment(lib,"ipcomm.lib")
+#pragma comment(lib,"ipstddata.lib")
+#pragma comment(lib,"ipgui.lib")
+#pragma comment(lib,"ipalgo.lib")
+#pragma comment(lib,"iplearn.lib")
+#endif
+#endif
+const string gVRun="..\\1奔跑.avi";
+const string gVOneRun="..\\1单只奔跑.avi";
+const string gVOneWander="..\\1单只漫步.avi";
+const string gVOneWander2="..\\1单只漫步2.avi";
+const string gVFire="..\\1打架.avi";
+const string gVTwoPigSideBySide="..\\ConsoleTest\\2二小猪并排走.avi";
+const string gVCloseToSow="..\\ConsoleTest\\1接近母猪.avi";
+const string gVSowStand2LieDown="..\\ConsoleTest\\3母猪由站立到趴卧.avi";
+const string gVSowStand2LieDown2="..\\ConsoleTest\\4母猪由站立到趴卧2.avi";
+const string gVOnlyStandSow="..\\ConsoleTest\\1只有站立的母猪.avi";
+
+//************************************
+// Method:    GetOptimalClustersNum
+// FullName:  GetOptimalClustersNum
+// Access:    public 
+// Returns:   int--最佳聚类数
+// Qualifier:
+// Parameter: const CvPoint * point--所要求取聚类的点集
+// Parameter: const int samplecount--点集的数量
+//************************************
+int GetOptimalClustersNum(CvMat *sampleMat,CvMat *clusterMat)//const CvPoint *curpoint,const CvPoint *prepoint,const int samplecount)
+{
+	double compactness=0;
+	double bestcompactness=0;
+	int bestcluster=-1;//最佳聚类数
+	int samplecount=sampleMat->rows;
+	for (int clustercount=1; clustercount<=samplecount; ++clustercount )//寻找最好的聚类数bestcluster
+	{
+		//cout<<"end "<<clustercount<<" "<<compactness<<endl;
+		cvKMeans2( sampleMat, clustercount, clusterMat,
+			cvTermCriteria( CV_TERMCRIT_EPS+CV_TERMCRIT_ITER, 10, 1.0 ),
+			5, 0, 0, 0, &compactness );
+		//cout<<"begin "<<clustercount<<" "<<compactness<<endl;
+		if (clustercount==1)
+		{
+			bestcompactness=compactness*clustercount*5;
+		}
+		if (compactness*clustercount*5<bestcompactness)
+		{
+			bestcompactness=compactness*clustercount*5;
+		}else if (clustercount!=1)
+		{
+			bestcluster=clustercount;
+			break;
+		}
+	}
+	bestcluster= (bestcluster==-1 ? samplecount : bestcluster-1);
+	return bestcluster;
+}
+//************************************
+// Method:    GetClusterInfo
+// FullName:  GetClusterInfo
+// Access:    public 
+// Returns:   void
+// Qualifier:
+// Parameter: const CvPoint * point--所要求取聚类的点集
+// Parameter: const int samplecount--point中包含的样本点数量
+// Parameter: const int bestcluster--最佳聚类数目
+// Parameter: int * label--point中每个样本对应的类别标识(长度为samplecount) 
+// Parameter: CvPoint * centers--每个类别的聚类中心(长度为bestcluster)
+// Parameter: CvBox2D * box--每个类别的最小外接矩形(长度为bestcluster)
+//************************************
+void GetClusterInfo(CvMat *sampleMat,CvMat *clusterMat,const int bestcluster,int *label,CvPoint *centers,CvBox2D *box)
+{
+	int nCols=sampleMat->cols;
+	CvMat* centerMat=cvCreateMat(bestcluster,nCols,CV_32FC1);
+	cvKMeans2( sampleMat, bestcluster, clusterMat,
+		cvTermCriteria( CV_TERMCRIT_EPS+CV_TERMCRIT_ITER, 10, 1.0 ),
+		10, 0, 0, centerMat, 0);
+	////////得到聚类中心点
+	CvPoint ipt;
+	for(int i = 0; i < bestcluster; ++i )
+	{
+		ipt.x = (int)centerMat->data.fl[i*nCols  ];
+		ipt.y = (int)centerMat->data.fl[i*nCols+1];
+		centers[i]=ipt;
+	}
+	////////////得到各聚类的最小外接矩形
+	CvMemStorage** storage =(CvMemStorage**)cvAlloc(bestcluster*sizeof(CvMemStorage*));
+	CvSeq** ptseq =(CvSeq**)cvAlloc(bestcluster*sizeof(CvSeq*));
+	for(int i=0; i<bestcluster; ++i)
+	{
+		storage[i]=cvCreateMemStorage(0);
+		ptseq[i]=cvCreateSeq( CV_SEQ_KIND_GENERIC|CV_32SC2, sizeof(CvContour),sizeof(CvPoint), storage[i]);
+	}
+	int samplecount=sampleMat->rows;
+	for(int i = 0; i < samplecount; ++i )
+	{
+		label[i] = clusterMat->data.i[i];//得到类别标识
+		ipt.x = (int)sampleMat->data.fl[i*nCols  ];
+		ipt.y = (int)sampleMat->data.fl[i*nCols+1];
+		cvSeqPush(ptseq[label[i]],&ipt);
+	}
+	for( int i = 0; i <bestcluster; ++i )
+	{
+		if (ptseq[i]->total==0)//序列中无元素
+		{
+			box[i].size.height=0;
+			box[i].size.width=0;
+			box[i].center.x=0;
+			box[i].center.y=0;
+			box[i].angle=0;
+		}else
+		{
+			box[i]=cvMinAreaRect2(ptseq[i],0);//得到最小面积的包围矩形 
+		}	
+	}
+	//释放内存空间
+	for(int i=0; i<bestcluster; ++i)
+	{
+		if(storage[i])
+		{
+			cvReleaseMemStorage(&storage[i]);
+		}
+	}
+	cvFree(&storage);
+	cvFree(&ptseq);
+	cvReleaseMat(&centerMat);
+}
+void DrawImg(IplImage *img,const int bestcluster,const int *label,const CvPoint *centers,const CvBox2D *box)
+{
+	if (!img || !label || !centers || !box)
+	{
+		return;
+	}
+	for(int i = 0; i <bestcluster; i++ )
+	{
+		cvCircle( img, centers[i], 5, CV_RGB(0,0,255), CV_FILLED, CV_AA, 0 );//画聚类中心点
+		CvPoint2D32f box_vtx[4];
+		cvBoxPoints( box[i], box_vtx );
+		CvPoint pt0,pt;
+		pt0.x = box_vtx[3].x;
+		pt0.y = box_vtx[3].y;
+		for(int j = 0; j < 4; j++ )
+		{
+			pt.x = box_vtx[j].x;
+			pt.y = box_vtx[j].y;
+			cvLine(img, pt0, pt, CV_RGB(255, 0, 0), 1, CV_AA, 0);//画外接矩形
+			pt0 = pt;
+		}
+	}
+}
+
+bool InitFindPigParam(IplImage *img,findpigblobs_userdata &userdata)
+{
+	/////检测猪只
+	string ImgPath=".\\母猪截图文件";
+	if (ImgPath.at(ImgPath.length()-1)!='\\')
+	{
+		ImgPath+='\\';
+	}
+
+	string LUPName;
+	LUPName=ImgPath+"母猪Y_CrCbSMinMaxIndex查找表.dat";
+	int row,col;
+	int *table=0;
+	CreateLUT(LUPName,&table,row,col);
+
+	CvGaussBGStatModelParams params;
+	params.win_size      = CV_BGFG_MOG_WINDOW_SIZE;
+	params.bg_threshold  = CV_BGFG_MOG_BACKGROUND_THRESHOLD;
+	params.std_threshold = CV_BGFG_MOG_STD_THRESHOLD;
+	params.weight_init   = CV_BGFG_MOG_WEIGHT_INIT;
+	params.variance_init = CV_BGFG_MOG_SIGMA_INIT*CV_BGFG_MOG_SIGMA_INIT;
+	params.minArea       = CV_BGFG_MOG_MINAREA*10;
+	params.n_gauss       = CV_BGFG_MOG_NGAUSSIANS-2;
+
+	CvGaussBGModel *m_bg_model = (CvGaussBGModel*)cvCreateGaussianBGModel(img,&params );
+	CvMemStorage *storage=cvCreateMemStorage();
+	userdata.bg_model=m_bg_model;
+	userdata.storage=storage;
+	userdata.LUPTable=table;
+	userdata.rows=row;
+	userdata.cols=col;
+	userdata.modelframes=0;
+	return true;
+}
+void ReleasePigParam(findpigblobs_userdata &userdata)
+{
+	ReleaseLUT(&userdata.LUPTable);
+	cvReleaseMemStorage(&userdata.storage);
+	cvReleaseBGStatModel((CvBGStatModel**)&userdata.bg_model);
+}
+//调用如下
+int main( int argc, char** argv )
+{ 
+//背景法参数
+	const int METHODNUM=3;
+	bool update_bg_model = true;
+	BackGroundModel *bgm[METHODNUM];
+	bgm[0]=new BackgroundSubtraction();
+	bgm[1]=new AvgBGM();
+	bgm[2]=new GMM();
+	int fr=0; 
+	bool bfirstframe=true;
+
+	string ImgPath="E:\\硕士毕业论文\\SuckingPigletsMonitoring\\ConsoleTest\\母猪截图文件\\";
+	if (ImgPath.at(ImgPath.length()-1)!='\\')
+	{
+		ImgPath+='\\';
+	}
+	//光流法参数
+	IplImage *image = 0, *grey = 0, *prev_grey = 0, *pyramid = 0, *prev_pyramid = 0, *swap_temp;
+	int win_size = 10;
+	const int MAX_COUNT = 500;
+	CvPoint2D32f* points[2] = {0,0}, *swap_points;
+	char* status = 0;
+	float*errors=0;
+	int count = 0;
+	int flags = 0;
+
+	int sample_count=0;//样本点数
+	vector<CvPoint2D32f> tmpCurpointvec;
+	vector<CvPoint2D32f> tmpPrepointvec;
+	//本人方法参数
+	CvCapture* capture = 0;
+	capture = cvCaptureFromAVI(gVRun.c_str());
+	findpigblobs_userdata UserData;
+	IplImage *pframe=cvQueryFrame(capture);
+	InitFindPigParam(pframe,UserData);
+	while(pframe=cvQueryFrame(capture))
+	{
+		cvShowImage("原图像",pframe);
+		cvSaveImage("原图像.jpg",pframe);
+////////////本人的方法
+		IplImage *mask=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+		FindPigBlobs(pframe,mask,&UserData);
+		CvMemStorage *storage=cvCreateMemStorage();
+		CvSeq *contour=NULL;
+		cvFindContours( mask, storage, &contour, sizeof(CvContour), CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE );
+		IplImage *tmpImg1=cvCloneImage(pframe);
+		cvSetZero(mask);
+		double dMaxArea=0;
+		for( ; contour != 0; contour = contour->h_next )
+		{
+			CvRect rc=((CvContour*)contour)->rect;
+			DrawMinAreaRect(tmpImg1,contour);
+			cvDrawContours( mask, contour, cvScalarAll(255), cvScalarAll(255), -1, CV_FILLED, 8 );
+		}
+		cvShowImage("原图像-标志结果",tmpImg1);
+		cvSaveImage("原图像-标志结果.jpg",tmpImg1);
+		cvShowImage("猪只检测算法-二值化结果",mask);
+		cvSaveImage("猪只检测算法-二值化结果.jpg",mask);
+		cvReleaseImage(&tmpImg1);
+		cvReleaseImage(&mask);
+		cvReleaseMemStorage(&storage);
+//////////////////背景法
+		if(bfirstframe)
+		{
+			for (int i=0; i<METHODNUM; ++i)
+			{
+				bgm[i]->CreateBGM(pframe);
+			}
+			bfirstframe=false;
+			continue;
+		}
+		for (int i=0; i<METHODNUM; ++i)
+		{
+			bgm[i]->UpdateBGM(pframe);
+		}
+		for (int i=0; i<METHODNUM; ++i)
+		{
+			string name=bgm[i]->GetWinName()+"_FG.jpg";
+			cvShowImage(name.c_str(), bgm[i]->GetFGFrame());
+			cvSaveImage(name.c_str(),bgm[i]->GetFGFrame());
+		}
+		/////////////光流法
+		if( !image )
+		{
+			/* allocate all the buffers */
+			image = cvCreateImage( cvGetSize(pframe),IPL_DEPTH_8U, 3 );
+			image->origin = pframe->origin;
+			grey = cvCreateImage( cvGetSize(pframe),IPL_DEPTH_8U, 1 );
+			prev_grey = cvCreateImage( cvGetSize(pframe),IPL_DEPTH_8U, 1 );
+			pyramid = cvCreateImage(cvSize(pframe->width+8,pframe->height/3),IPL_DEPTH_8U, 1 );
+			prev_pyramid = cvCreateImage(cvSize(pframe->width+8,pframe->height/3),IPL_DEPTH_8U, 1 );
+			points[0] = (CvPoint2D32f*)cvAlloc(MAX_COUNT*sizeof(points[0][0]));
+			points[1] = (CvPoint2D32f*)cvAlloc(MAX_COUNT*sizeof(points[0][0]));
+			status = (char*)cvAlloc(MAX_COUNT);
+			errors=(float*)cvAlloc(MAX_COUNT*sizeof(float));
+			flags = 0;
+		}
+		else
+		{
+			cvCopy( pframe, image, 0 );
+			cvCvtColor( image, grey, CV_BGR2GRAY );
+			cvCalcOpticalFlowPyrLK( prev_grey, grey, prev_pyramid, pyramid,
+				points[0], points[1], count, cvSize(win_size,win_size), 3, status, errors,
+				cvTermCriteria(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS,20,0.03), flags );
+			flags |= CV_LKFLOW_PYR_A_READY;
+			tmpCurpointvec.clear();
+			tmpPrepointvec.clear();
+			for(int i = 0; i < count; i++ )
+			{
+				if( !status[i])// || errors[i]>500)
+					continue;
+				CvPoint2D32f p0 = points[0][i];
+				CvPoint2D32f p1 = points[1][i];
+				if((p0.x-p1.x)*(p0.x-p1.x)+(p0.y-p1.y)*(p0.y-p1.y)<20 || (p0.x-p1.x)*(p0.x-p1.x)+(p0.y-p1.y)*(p0.y-p1.y)>1000
+					) continue;
+				tmpCurpointvec.push_back(p1);
+				tmpPrepointvec.push_back(p0);
+				cvLine( image, cvPointFrom32f(p0), cvPointFrom32f(p1), CV_RGB(255,0,0),1 );
+				cvCircle( image, cvPointFrom32f(p1), 2, CV_RGB(255,0,0), -1, 8,0);
+			}
+			cvShowImage("光流图",image);
+			cvSaveImage("光流图.jpg",image);
+			sample_count=tmpCurpointvec.size();
+			if (sample_count>2)
+			{
+				int nCols=5;
+				CvMat* pointMat = cvCreateMat( sample_count, nCols, CV_32FC1 );
+				CvMat* clustersMat = cvCreateMat( sample_count, 1, CV_32SC1 );
+				for(int i = 0; i < sample_count; ++i )
+				{
+					pointMat->data.fl[i*nCols  ]=tmpCurpointvec.at(i).x;
+					pointMat->data.fl[i*nCols+1]=tmpCurpointvec.at(i).y;
+					pointMat->data.fl[i*nCols+2]=tmpPrepointvec.at(i).x;
+					pointMat->data.fl[i*nCols+3]=tmpPrepointvec.at(i).y;
+					float tmpfloat=(tmpCurpointvec.at(i).y-tmpPrepointvec.at(i).y)==0 ? 0 : (tmpCurpointvec.at(i).x-tmpPrepointvec.at(i).x)/(tmpCurpointvec.at(i).y-tmpPrepointvec.at(i).y);
+					pointMat->data.fl[i*nCols+4]=atan(tmpfloat);
+				}
+				int bestcluster=GetOptimalClustersNum(pointMat,clustersMat);
+				int *label=(int*)cvAlloc(sample_count*sizeof(int));
+				CvPoint *centerPoint=(CvPoint*)cvAlloc(bestcluster*sizeof(CvPoint));
+				CvBox2D *box=(CvBox2D*)cvAlloc(bestcluster*sizeof(CvBox2D));
+				GetClusterInfo(pointMat,clustersMat,bestcluster,label,centerPoint,box);
+				DrawImg(image,bestcluster,label,centerPoint,box);
+				cvReleaseMat(&pointMat);
+				cvReleaseMat(&clustersMat);
+				cvFree(&label);
+				cvFree(&centerPoint);
+				cvFree(&box);		
+			}
+		}
+		IplImage *tmpImg=cvCloneImage(pframe);
+		IplImage* eig = cvCreateImage( cvGetSize(grey), IPL_DEPTH_32F, 1 );
+		IplImage* temp = cvCreateImage( cvGetSize(grey), IPL_DEPTH_32F, 1 );
+		double quality = 0.01;
+		double min_distance = 10;
+
+		count = MAX_COUNT;
+		cvGoodFeaturesToTrack( grey, eig, temp, points[1], &count,
+			quality, min_distance, 0, 3, 0, 0.04 );
+		cvFindCornerSubPix( grey, points[1], count,
+			cvSize(win_size,win_size), cvSize(-1,-1),
+			cvTermCriteria(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS,20,0.03));
+		for (int i=0; i<count; i++)
+		{
+			cvCircle( tmpImg, cvPointFrom32f(points[1][i]), 3, CV_RGB(0,255,0), -1, 8,0);
+		}
+		cvReleaseImage(&tmpImg);
+		cvReleaseImage( &eig );
+		cvReleaseImage( &temp );
+
+		CV_SWAP( prev_grey, grey, swap_temp );
+		CV_SWAP( prev_pyramid, pyramid, swap_temp );
+		CV_SWAP( points[0], points[1], swap_points );
+
+		if(cvWaitKey(10)==27) break;
+	}
+	cvDestroyAllWindows();
+	//释放本人的方法
+	ReleasePigParam(UserData);
+	//释放背景法
+	for (int i=0; i<METHODNUM; ++i)
+	{
+		delete bgm[i];
+	}
+//释放光流法
+	cvReleaseImage(&image);
+	cvReleaseImage(&grey);
+	cvReleaseImage(&prev_grey);
+	cvReleaseImage(&pyramid);
+	cvReleaseImage(&prev_pyramid);
+	cvFree(&points[0]);
+	cvFree(&points[1]);
+	cvFree(&status);
+	cvFree(&errors);
+
+	return 0;
+}
+
+/////////////////////////有无去阴影检测效果的比较
+#include "E:\硕士毕业论文\SuckingPigletsMonitoring\GaussBG\BackGroundModel.h"
+#include "E:\硕士毕业论文\SuckingPigletsMonitoring\MainProgram_GUI\FindPigObject.h"
+#pragma warning(disable:4996)
+#include <cxcore.h>
+#include <cv.h>
+#include <highgui.h>
+#include <cvaux.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <list>
+#include <queue>
+#include <map>
+#include <io.h>
+using namespace std;
+#if CV_MAJOR_VERSION==2 && CV_MINOR_VERSION==1
+#ifdef _DEBUG
+#pragma comment(lib,"ipcommd.lib")
+#pragma comment(lib,"ipstddatad.lib")
+#pragma comment(lib,"ipguid.lib")
+#pragma comment(lib,"ipalgod.lib")
+#pragma comment(lib,"iplearnd.lib")
+#else
+#pragma comment(lib,"ipcomm.lib")
+#pragma comment(lib,"ipstddata.lib")
+#pragma comment(lib,"ipgui.lib")
+#pragma comment(lib,"ipalgo.lib")
+#pragma comment(lib,"iplearn.lib")
+#endif
+#endif
+
+void DrawImg(IplImage *img,const int bestcluster,const int *label,const CvPoint *centers,const CvBox2D *box)
+{
+	if (!img || !label || !centers || !box)
+	{
+		return;
+	}
+	for(int i = 0; i <bestcluster; i++ )
+	{
+		cvCircle( img, centers[i], 5, CV_RGB(0,0,255), CV_FILLED, CV_AA, 0 );//画聚类中心点
+		CvPoint2D32f box_vtx[4];
+		cvBoxPoints( box[i], box_vtx );
+		CvPoint pt0,pt;
+		pt0.x = box_vtx[3].x;
+		pt0.y = box_vtx[3].y;
+		for(int j = 0; j < 4; j++ )
+		{
+			pt.x = box_vtx[j].x;
+			pt.y = box_vtx[j].y;
+			cvLine(img, pt0, pt, CV_RGB(255, 0, 0), 1, CV_AA, 0);//画外接矩形
+			pt0 = pt;
+		}
+	}
+}
+
+bool InitFindPigParam(IplImage *img,findpigblobs_userdata &userdata)
+{
+	/////检测猪只
+	string ImgPath=".\\母猪截图文件";
+	if (ImgPath.at(ImgPath.length()-1)!='\\')
+	{
+		ImgPath+='\\';
+	}
+
+	string LUPName;
+	LUPName=ImgPath+"母猪Y_CrCbSMinMaxIndex查找表.dat";
+	int row,col;
+	int *table=0;
+	CreateLUT(LUPName,&table,row,col);
+
+	CvGaussBGStatModelParams params;
+	params.win_size      = CV_BGFG_MOG_WINDOW_SIZE;
+	params.bg_threshold  = CV_BGFG_MOG_BACKGROUND_THRESHOLD;
+	params.std_threshold = CV_BGFG_MOG_STD_THRESHOLD;
+	params.weight_init   = CV_BGFG_MOG_WEIGHT_INIT;
+	params.variance_init = CV_BGFG_MOG_SIGMA_INIT*CV_BGFG_MOG_SIGMA_INIT;
+	params.minArea       = CV_BGFG_MOG_MINAREA*10;
+	params.n_gauss       = CV_BGFG_MOG_NGAUSSIANS-2;
+
+	CvGaussBGModel *m_bg_model = (CvGaussBGModel*)cvCreateGaussianBGModel(img,&params );
+	CvMemStorage *storage=cvCreateMemStorage();
+	userdata.bg_model=m_bg_model;
+	userdata.storage=storage;
+	userdata.LUPTable=table;
+	userdata.rows=row;
+	userdata.cols=col;
+	userdata.modelframes=0;
+	userdata.isRemoveShadow=true;
+	return true;
+}
+void ReleasePigParam(findpigblobs_userdata &userdata)
+{
+	ReleaseLUT(&userdata.LUPTable);
+	cvReleaseMemStorage(&userdata.storage);
+	cvReleaseBGStatModel((CvBGStatModel**)&userdata.bg_model);
+}
+//调用如下
+int main( int argc, char** argv )
+{ 
+
+	//本人方法参数
+	CvCapture* capture = 0;
+	CvMemStorage *storage=cvCreateMemStorage();
+	CvSeq *contour=NULL;
+	capture = cvCaptureFromAVI(gVRun.c_str());
+	findpigblobs_userdata UserData;
+	IplImage *pframe=cvQueryFrame(capture);
+	IplImage *mask=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	IplImage *pDrawImg=cvCloneImage(pframe);
+	InitFindPigParam(pframe,UserData);
+	while(pframe=cvQueryFrame(capture))
+	{
+		cvShowImage("原图像",pframe);
+		cvSaveImage("原图像.jpg",pframe);
+////////////本人的方法
+		UserData.isRemoveShadow=true;
+		FindPigBlobs(pframe,mask,&UserData);
+		cvClearMemStorage(storage);
+		cvFindContours( mask, storage, &contour, sizeof(CvContour), CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE );
+		cvSetZero(mask);
+		cvCopyImage(pframe,pDrawImg);
+		for( ; contour != 0; contour = contour->h_next )
+		{
+			CvRect rc=((CvContour*)contour)->rect;
+			DrawMinAreaRect(pDrawImg,contour);
+			cvDrawContours( mask, contour, cvScalarAll(255), cvScalarAll(255), -1, CV_FILLED, 8 );
+		}
+		cvShowImage("去阴影-标志结果",pDrawImg);
+		cvSaveImage("去阴影-标志结果.jpg",pDrawImg);
+		cvShowImage("去阴影背景",mask);
+		cvSaveImage("去阴影背景.jpg",mask);
+
+		UserData.isRemoveShadow=false;
+		FindPigBlobs(pframe,mask,&UserData);
+		cvClearMemStorage(storage);
+		cvFindContours( mask, storage, &contour, sizeof(CvContour), CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE );
+		cvSetZero(mask);
+		cvCopyImage(pframe,pDrawImg);
+		for( ; contour != 0; contour = contour->h_next )
+		{
+			CvRect rc=((CvContour*)contour)->rect;
+			DrawMinAreaRect(pDrawImg,contour);
+			cvDrawContours( mask, contour, cvScalarAll(255), cvScalarAll(255), -1, CV_FILLED, 8 );
+		}
+		cvShowImage("未去阴影-标志结果",pDrawImg);
+		cvSaveImage("未去阴影-标志结果.jpg",pDrawImg);
+		cvShowImage("未去阴影背景",mask);
+		cvSaveImage("未去阴影背景.jpg",mask);
+
+		if(cvWaitKey(0)==27) break;
+	}
+	cvReleaseMemStorage(&storage);
+	cvReleaseImage(&mask);
+	cvReleaseImage(&pDrawImg);
+	cvDestroyAllWindows();
+	cvReleaseCapture(&capture);
+	//释放本人的方法
+	ReleasePigParam(UserData);
+	return 0;
+}
+
+///////////////////////获取外接矩形重叠图
+#include "E:\硕士毕业论文\SuckingPigletsMonitoring\GaussBG\BackGroundModel.h"
+#include "E:\硕士毕业论文\SuckingPigletsMonitoring\MainProgram_GUI\FindPigObject.h"
+#pragma warning(disable:4996)
+#include <cxcore.h>
+#include <cv.h>
+#include <highgui.h>
+#include <cvaux.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <list>
+#include <queue>
+#include <map>
+#include <io.h>
+using namespace std;
+#if CV_MAJOR_VERSION==2 && CV_MINOR_VERSION==1
+#ifdef _DEBUG
+#pragma comment(lib,"ipcommd.lib")
+#pragma comment(lib,"ipstddatad.lib")
+#pragma comment(lib,"ipguid.lib")
+#pragma comment(lib,"ipalgod.lib")
+#pragma comment(lib,"iplearnd.lib")
+#else
+#pragma comment(lib,"ipcomm.lib")
+#pragma comment(lib,"ipstddata.lib")
+#pragma comment(lib,"ipgui.lib")
+#pragma comment(lib,"ipalgo.lib")
+#pragma comment(lib,"iplearn.lib")
+#endif
+#endif
+
+void DrawImg(IplImage *img,const int bestcluster,const int *label,const CvPoint *centers,const CvBox2D *box)
+{
+	if (!img || !label || !centers || !box)
+	{
+		return;
+	}
+	for(int i = 0; i <bestcluster; i++ )
+	{
+		cvCircle( img, centers[i], 5, CV_RGB(0,0,255), CV_FILLED, CV_AA, 0 );//画聚类中心点
+		CvPoint2D32f box_vtx[4];
+		cvBoxPoints( box[i], box_vtx );
+		CvPoint pt0,pt;
+		pt0.x = box_vtx[3].x;
+		pt0.y = box_vtx[3].y;
+		for(int j = 0; j < 4; j++ )
+		{
+			pt.x = box_vtx[j].x;
+			pt.y = box_vtx[j].y;
+			cvLine(img, pt0, pt, CV_RGB(255, 0, 0), 1, CV_AA, 0);//画外接矩形
+			pt0 = pt;
+		}
+	}
+}
+
+bool InitFindPigParam(IplImage *img,findpigblobs_userdata &userdata)
+{
+	/////检测猪只
+	string ImgPath=".\\母猪截图文件";
+	if (ImgPath.at(ImgPath.length()-1)!='\\')
+	{
+		ImgPath+='\\';
+	}
+
+	string LUPName;
+	LUPName=ImgPath+"母猪Y_CrCbSMinMaxIndex查找表.dat";
+	int row,col;
+	int *table=0;
+	CreateLUT(LUPName,&table,row,col);
+
+	CvGaussBGStatModelParams params;
+	params.win_size      = CV_BGFG_MOG_WINDOW_SIZE;
+	params.bg_threshold  = CV_BGFG_MOG_BACKGROUND_THRESHOLD;
+	params.std_threshold = CV_BGFG_MOG_STD_THRESHOLD;
+	params.weight_init   = CV_BGFG_MOG_WEIGHT_INIT;
+	params.variance_init = CV_BGFG_MOG_SIGMA_INIT*CV_BGFG_MOG_SIGMA_INIT;
+	params.minArea       = CV_BGFG_MOG_MINAREA*10;
+	params.n_gauss       = CV_BGFG_MOG_NGAUSSIANS-2;
+
+	CvGaussBGModel *m_bg_model = (CvGaussBGModel*)cvCreateGaussianBGModel(img,&params );
+	CvMemStorage *storage=cvCreateMemStorage();
+	userdata.bg_model=m_bg_model;
+	userdata.storage=storage;
+	userdata.LUPTable=table;
+	userdata.rows=row;
+	userdata.cols=col;
+	userdata.modelframes=0;
+	userdata.isRemoveShadow=true;
+	return true;
+}
+void ReleasePigParam(findpigblobs_userdata &userdata)
+{
+	ReleaseLUT(&userdata.LUPTable);
+	cvReleaseMemStorage(&userdata.storage);
+	cvReleaseBGStatModel((CvBGStatModel**)&userdata.bg_model);
+}
+//调用如下
+int main( int argc, char** argv )
+{ 
+
+	//本人方法参数
+	CvCapture* capture = 0;
+	CvMemStorage *storage=cvCreateMemStorage();
+	CvSeq *contour=NULL;
+	capture = cvCaptureFromAVI(gVRun.c_str());
+	findpigblobs_userdata UserData;
+	IplImage *pframe=cvQueryFrame(capture);
+	IplImage *mask=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	IplImage *rcMask=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	IplImage *pDrawImg=cvCloneImage(pframe);
+	cvSet(rcMask,cvScalarAll(255));
+	InitFindPigParam(pframe,UserData);
+	int i=0;
+	while(pframe=cvQueryFrame(capture))
+	{
+		cvShowImage("原图像",pframe);
+		cvSaveImage("原图像.jpg",pframe);
+////////////本人的方法
+		UserData.isRemoveShadow=true;
+		FindPigBlobs(pframe,mask,&UserData);
+		cvClearMemStorage(storage);
+		cvFindContours( mask, storage, &contour, sizeof(CvContour), CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE );
+		cvCopyImage(pframe,pDrawImg);
+		for( ; contour != 0; contour = contour->h_next )
+		{
+			CvRect rc=((CvContour*)contour)->rect;
+			DrawMinAreaRect(pDrawImg,contour);
+			if(i%5==0){
+				cvRectangleR(rcMask,rc,cvScalarAll(0));
+			}
+		}
+		cvShowImage("去阴影-标志结果",pDrawImg);
+		cvSaveImage("去阴影-标志结果.jpg",pDrawImg);
+		cvShowImage("外接矩形框",rcMask);
+		cvSaveImage("外接矩形框.jpg",rcMask);
+		i++;
+		if(cvWaitKey(10)==27) break;
+	}
+	cvReleaseMemStorage(&storage);
+	cvReleaseImage(&mask);
+	cvReleaseImage(&rcMask);
+	cvReleaseImage(&pDrawImg);
+	cvDestroyAllWindows();
+	cvReleaseCapture(&capture);
+	//释放本人的方法
+	ReleasePigParam(UserData);
+	return 0;
+}
+
+/////////////////////////////////////////

@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="跟踪类">
+      <UniqueIdentifier>{c6bb1569-82b2-4624-abe4-6c76e2073028}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Function.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\陈吉宏\我的所有项目\图像处理库\目标检测与跟踪\WinCon\MovingObject.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\陈吉宏\我的所有项目\图像处理库\目标检测与跟踪\WinCon\TargetTracking.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MainPrograme.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\blob.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobContour.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobOperators.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\ComponentLabeling.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PhataBlobContainter.cpp">
+      <Filter>跟踪类</Filter>
+    </ClCompile>
+    <ClCompile Include="CvTrack.cpp">
+      <Filter>跟踪类</Filter>
+    </ClCompile>
+    <ClCompile Include="KalmanBlob.cpp">
+      <Filter>跟踪类</Filter>
+    </ClCompile>
+    <ClCompile Include="KalmanTrack.cpp">
+      <Filter>跟踪类</Filter>
+    </ClCompile>
+    <ClCompile Include="Histogram.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PhataTrackContainter.cpp">
+      <Filter>跟踪类</Filter>
+    </ClCompile>
+    <ClCompile Include="Track.cpp">
+      <Filter>跟踪类</Filter>
+    </ClCompile>
+    <ClCompile Include="PhataTrackBlobs.cpp">
+      <Filter>跟踪类</Filter>
+    </ClCompile>
+    <ClCompile Include="MBBTrack.cpp">
+      <Filter>跟踪类</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MainProgram_GUI\FindPigObject.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Function.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\陈吉宏\我的所有项目\图像处理库\目标检测与跟踪\WinCon\MovingObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\陈吉宏\我的所有项目\图像处理库\目标检测与跟踪\WinCon\TargetTracking.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\blob.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobContour.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobOperators.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\ComponentLabeling.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PhataBlobContainter.h">
+      <Filter>跟踪类</Filter>
+    </ClInclude>
+    <ClInclude Include="CvTrack.h">
+      <Filter>跟踪类</Filter>
+    </ClInclude>
+    <ClInclude Include="KalmanBlob.h">
+      <Filter>跟踪类</Filter>
+    </ClInclude>
+    <ClInclude Include="KalmanTrack.h">
+      <Filter>跟踪类</Filter>
+    </ClInclude>
+    <ClInclude Include="Histogram.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PhataTrackContainter.h">
+      <Filter>跟踪类</Filter>
+    </ClInclude>
+    <ClInclude Include="Track.h">
+      <Filter>跟踪类</Filter>
+    </ClInclude>
+    <ClInclude Include="CountedPtr.h">
+      <Filter>跟踪类</Filter>
+    </ClInclude>
+    <ClInclude Include="PhataTrackBlobs.h">
+      <Filter>跟踪类</Filter>
+    </ClInclude>
+    <ClInclude Include="MBBTrack.h">
+      <Filter>跟踪类</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MainProgram_GUI\FindPigObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

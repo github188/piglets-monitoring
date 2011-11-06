@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A38310BC-827F-4588-904A-213D143533D8}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>MainProgram</RootNamespace>
+    <ProjectName>MainProgram</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>E:\陈吉宏\我的所有项目\图像处理库\Opencv库\库文件;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>E:\陈吉宏\我的所有项目\图像处理库\Opencv库\库文件;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\陈吉宏\我的所有项目\图像处理库\目标检测与跟踪\WinCon\MovingObject.cpp" />
+    <ClCompile Include="..\..\..\陈吉宏\我的所有项目\图像处理库\目标检测与跟踪\WinCon\TargetTracking.cpp" />
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\blob.cpp" />
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobContour.cpp" />
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobOperators.cpp" />
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\ComponentLabeling.cpp" />
+    <ClCompile Include="..\MainProgram_GUI\FindPigObject.cpp" />
+    <ClCompile Include="CvTrack.cpp" />
+    <ClCompile Include="Histogram.cpp" />
+    <ClCompile Include="KalmanBlob.cpp" />
+    <ClCompile Include="KalmanTrack.cpp" />
+    <ClCompile Include="MainPrograme.cpp" />
+    <ClCompile Include="Function.cpp" />
+    <ClCompile Include="MBBTrack.cpp" />
+    <ClCompile Include="PhataBlobContainter.cpp" />
+    <ClCompile Include="PhataTrackBlobs.cpp" />
+    <ClCompile Include="PhataTrackContainter.cpp" />
+    <ClCompile Include="Track.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\陈吉宏\我的所有项目\图像处理库\目标检测与跟踪\WinCon\MovingObject.h" />
+    <ClInclude Include="..\..\..\陈吉宏\我的所有项目\图像处理库\目标检测与跟踪\WinCon\TargetTracking.h" />
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\blob.h" />
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobContour.h" />
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobOperators.h" />
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\ComponentLabeling.h" />
+    <ClInclude Include="..\MainProgram_GUI\FindPigObject.h" />
+    <ClInclude Include="CountedPtr.h" />
+    <ClInclude Include="CvTrack.h" />
+    <ClInclude Include="Function.h" />
+    <ClInclude Include="Histogram.h" />
+    <ClInclude Include="KalmanBlob.h" />
+    <ClInclude Include="KalmanTrack.h" />
+    <ClInclude Include="MBBTrack.h" />
+    <ClInclude Include="PhataBlobContainter.h" />
+    <ClInclude Include="PhataTrackBlobs.h" />
+    <ClInclude Include="PhataTrackContainter.h" />
+    <ClInclude Include="Track.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

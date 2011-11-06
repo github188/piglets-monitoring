@@ -1,0 +1,180 @@
+/////////////////////////////////////////////////////////////////////////////////////////
+////////////根据查找表检测母猪，经测试，只有以Y分量为主分量,Cr/Cb/S分量为辅分量的查找表才有意义，
+////////////以非Y分量为主分量的查找表都没有用(下面为测试代码，可用于论文贴图说明)////////////////
+#include <sstream>
+using namespace std;
+//table查找表，rows查找表行数,cols查找表列数,usecols所使用到的列数，不能大于cols
+//pframe的大小为(usecols+1)/2，pframe[0]为主分量，pframe[1]...pframe[(usecols+1)/2]为辅分量
+//
+void cvLookUpTable(int *table,const int Rows,const int Cols,const int usecols,IplImage** pframe, IplImage* mask){
+	assert(Cols>=usecols);
+	const int IMGNUM=(usecols-1)/2;
+	IplImage **imgs=new IplImage*[IMGNUM];
+	IplImage *grayImg=pframe[0];
+	IplImage *img=grayImg;
+	for (int i=0; i<IMGNUM; ++i)
+	{
+		imgs[i] =pframe[i+1];
+	}
+	cvSetZero(mask);
+	int *param=new int[usecols-1];
+	int *componPiex=new int[IMGNUM];
+	for (int i=0; i<img->height; ++i){
+		for (int j=0; j<img->width; ++j){
+			uchar grayPiex=((unsigned char *)grayImg->imageData+ i* grayImg->widthStep)[j];
+			for (int m=0; m<Rows; ++m)
+			{
+				if (grayPiex==table[m*Cols+0])
+				{
+					for (int n=0; n<usecols-1; ++n)
+					{
+						param[n]=table[m*Cols+n+1];
+					}
+					for (int imgnumIndex=0; imgnumIndex<IMGNUM; ++imgnumIndex){
+						componPiex[imgnumIndex]=((unsigned char *)imgs[imgnumIndex]->imageData+ i* imgs[imgnumIndex]->widthStep)[j];
+					}
+					bool isObjectPiex=true;
+					for (int n=0; n<IMGNUM; ++n)
+					{
+						if (!(componPiex[n]>=param[n*2] && componPiex[n] <=param[n*2+1])){
+							isObjectPiex=false;
+							break;
+						}
+					}
+					if (isObjectPiex==true)
+					{
+						((unsigned char *)mask->imageData+ i* mask->widthStep)[j]=255;
+					}
+					break;//for (int m=0; m<Rows; ++m)
+				}
+				
+			}
+		}
+	}
+	if (imgs){
+		delete[] imgs;
+		imgs=NULL;
+	}
+	if (componPiex){
+		delete[] componPiex;
+		componPiex=NULL;
+	}
+	if(param) {
+		delete []param;
+		param=NULL;
+	}
+}
+bool CreateLUT(string LUTPath,int **table,int &row, int &col)
+{
+	FILE *file=0;
+	if (!(file=fopen(LUTPath.c_str(),"r")))
+	{
+		return false;
+	}
+	fscanf(file,"%d %d",&row,&col);
+	*table=new int[row*col];
+	for (int i=0; i<row; ++i){
+		for (int j=0; j<col; ++j){		
+			float tmp;
+			fscanf(file,"%f",&tmp);
+			(*table)[i*col+j]=tmp;
+		}
+	}
+	fclose(file);
+	return true;
+}
+void ReleaseLUT(int **table)
+{
+	if(!table) return;
+	if (*table)
+	{
+		int *tmpTable=*table;
+		*table=0;
+		delete []tmpTable;
+	}
+}
+//调用如下
+int main( int argc, char** argv )
+{ 
+	string ImgPath=".\\母猪截图文件\\";
+	if (ImgPath.at(ImgPath.length()-1)!='\\')
+	{
+		ImgPath+='\\';
+	}
+
+	string LUPName[4];
+	LUPName[0]=ImgPath+"母猪Y_CrCbSMinMaxIndex查找表.dat";
+	LUPName[1]=ImgPath+"母猪Cr_YCbSMinMaxIndex查找表.dat";
+	LUPName[2]=ImgPath+"母猪Cb_YCrSMinMaxIndex查找表.dat";
+	LUPName[3]=ImgPath+"母猪S_YCrCbMinMaxIndex查找表.dat";
+	int row[4],col[4];
+	int *table[4]={0};
+		CvCapture* capture = 0;
+	for (int i=0; i<4; ++i)
+	{
+		CreateLUT(LUPName[i],&table[i],row[i],col[i]);
+	}
+	capture = cvCaptureFromAVI(gVOneWander.c_str());
+	if (!capture)
+	{
+		return -1;
+	}
+	IplImage *pframe=cvQueryFrame(capture);
+	IplImage*mask=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	IplImage*maxmask=cvCreateImage(cvGetSize(pframe),IPL_DEPTH_8U,1);
+	CvMemStorage *storage=cvCreateMemStorage();
+	while(pframe=cvQueryFrame(capture))
+	{
+		cvLightingCompensation(pframe,pframe);
+
+		IplImage *tmpImg = cvCreateImage(cvSize(pframe->width, pframe->height), pframe->depth, pframe->nChannels);
+		IplImage *imgs[4];
+		for(int i=0; i<4; ++i)
+		{
+			imgs[i]= cvCreateImage(cvSize(pframe->width, pframe->height), pframe->depth, 1);
+		}
+
+		cvCvtColor(pframe,tmpImg,CV_BGR2YCrCb);
+		cvSplit(tmpImg,imgs[0], imgs[1], imgs[2], 0);
+		cvCvtColor(pframe,tmpImg,CV_BGR2HSV);
+		cvSplit(tmpImg, 0, imgs[3], 0, 0);	
+		cvReleaseImage(&tmpImg);
+
+		for (int i=0; i<4; ++i)
+		{
+			IplImage *tmpSwapImg=0;
+			CV_SWAP(imgs[0],imgs[i],tmpSwapImg);			
+			cvLookUpTable(table[i],row[i],col[i],5,imgs,mask);
+			cvDilate(mask,mask);
+			cvErode(mask,mask);
+			cvDilate(mask,mask,0,1);	
+			cvSetZero(maxmask);
+			cvClearMemStorage(storage);
+			CvSeq *contour=GetMaxContour(mask,storage);
+			cvDrawContours(maxmask,contour,cvScalarAll(255),cvScalarAll(255),-1,CV_FILLED, 8 );
+			//DrawMinAreaRect(pframe,contour);
+			stringstream str;
+			str<<"video"<<i;
+			cvShowImage(str.str().c_str(),maxmask);
+			if(cvWaitKey(10)==27) break;
+		}
+		for(int i=0; i<4; ++i)
+		{
+			cvReleaseImage(&imgs[i]);
+		}	
+		cvShowImage("原图像",pframe);
+	}
+	cvReleaseImage(&mask);
+	cvReleaseImage(&maxmask);
+	cvReleaseMemStorage(&storage);
+	cvReleaseCapture(&capture);
+	cvDestroyAllWindows();
+	for (int i=0; i<4; ++i)
+	{
+		ReleaseLUT(&table[i]);
+	}
+	return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////

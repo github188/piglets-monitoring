@@ -1,0 +1,308 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="JHCVideo">
+      <UniqueIdentifier>{050cb55f-c015-4d70-b30e-2a387eef4d01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="目标检测与跟踪">
+      <UniqueIdentifier>{07def517-d39e-47ce-a322-9b9ddf61cc71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="opencv添加汉字功能">
+      <UniqueIdentifier>{de119774-08e5-492a-a198-9cb4b51b6565}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="res\MainProgram_GUI.rc2">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\MainProgram_GUI.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="pig.png">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="pig.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_close.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_close_click.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_max.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_max_click.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_min.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_min_click.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_openavi.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_openavi_click.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_opendvr.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_opendvr_click.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\DVR.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\DVRDis.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\DVRSel.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\本地视频.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\本地视频Dis.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\本地视频Sel.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\pig.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_max_dis.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_cancel.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_cancel_click.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_cancel_dis.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_ok.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_ok_click.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\btn_ok_dis.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\配置.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\配置Dis.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\配置Sel.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainProgram_GUI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MainProgram_GUIDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CDialogSK.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="JHCVideo\VideoDevice.h">
+      <Filter>JHCVideo</Filter>
+    </ClInclude>
+    <ClInclude Include="JHCVideo\Usbvideo.h">
+      <Filter>JHCVideo</Filter>
+    </ClInclude>
+    <ClInclude Include="JHCVideo\Filevideo.h">
+      <Filter>JHCVideo</Filter>
+    </ClInclude>
+    <ClInclude Include="JHCVideo\DHDvr.h">
+      <Filter>JHCVideo</Filter>
+    </ClInclude>
+    <ClInclude Include="JHCVideo\CameraDS.h">
+      <Filter>JHCVideo</Filter>
+    </ClInclude>
+    <ClInclude Include="JHCVideo\DaHua\dhassistant.h">
+      <Filter>JHCVideo</Filter>
+    </ClInclude>
+    <ClInclude Include="JHCVideo\DaHua\dhnetsdk.h">
+      <Filter>JHCVideo</Filter>
+    </ClInclude>
+    <ClInclude Include="JHCVideo\DaHua\dhplay.h">
+      <Filter>JHCVideo</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgDVRConfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MainProgram\Histogram.h">
+      <Filter>目标检测与跟踪</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MainProgram\MBBTrack.h">
+      <Filter>目标检测与跟踪</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MainProgram\PhataBlobContainter.h">
+      <Filter>目标检测与跟踪</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MainProgram\PhataTrackBlobs.h">
+      <Filter>目标检测与跟踪</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MainProgram\PhataTrackContainter.h">
+      <Filter>目标检测与跟踪</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MainProgram\Track.h">
+      <Filter>目标检测与跟踪</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\blob.h">
+      <Filter>目标检测与跟踪</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobContour.h">
+      <Filter>目标检测与跟踪</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobOperators.h">
+      <Filter>目标检测与跟踪</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\ComponentLabeling.h">
+      <Filter>目标检测与跟踪</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MainProgram\CountedPtr.h">
+      <Filter>目标检测与跟踪</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MainProgram\KalmanBlob.h">
+      <Filter>目标检测与跟踪</Filter>
+    </ClInclude>
+    <ClInclude Include="FindPigObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cxlog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgAppConfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericEdit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgAnalyse.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="opencv输出汉字\CvxText.h">
+      <Filter>opencv添加汉字功能</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MainProgram_GUI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MainProgram_GUIDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CDialogSK.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="JHCVideo\CameraDS.cpp">
+      <Filter>JHCVideo</Filter>
+    </ClCompile>
+    <ClCompile Include="JHCVideo\VideoDevice.cpp">
+      <Filter>JHCVideo</Filter>
+    </ClCompile>
+    <ClCompile Include="JHCVideo\Usbvideo.cpp">
+      <Filter>JHCVideo</Filter>
+    </ClCompile>
+    <ClCompile Include="JHCVideo\Filevideo.cpp">
+      <Filter>JHCVideo</Filter>
+    </ClCompile>
+    <ClCompile Include="JHCVideo\DHDvr.cpp">
+      <Filter>JHCVideo</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgDVRConfig.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MainProgram\Histogram.cpp">
+      <Filter>目标检测与跟踪</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MainProgram\MBBTrack.cpp">
+      <Filter>目标检测与跟踪</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MainProgram\PhataBlobContainter.cpp">
+      <Filter>目标检测与跟踪</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MainProgram\PhataTrackBlobs.cpp">
+      <Filter>目标检测与跟踪</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MainProgram\PhataTrackContainter.cpp">
+      <Filter>目标检测与跟踪</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MainProgram\Track.cpp">
+      <Filter>目标检测与跟踪</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\blob.cpp">
+      <Filter>目标检测与跟踪</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobContour.cpp">
+      <Filter>目标检测与跟踪</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\BlobOperators.cpp">
+      <Filter>目标检测与跟踪</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GoogleCode_video-tracker\opencv_cvBlobsLibV8.3\ComponentLabeling.cpp">
+      <Filter>目标检测与跟踪</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MainProgram\KalmanBlob.cpp">
+      <Filter>目标检测与跟踪</Filter>
+    </ClCompile>
+    <ClCompile Include="FindPigObject.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgAppConfig.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericEdit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgAnalyse.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="opencv输出汉字\CvxText.cpp">
+      <Filter>opencv添加汉字功能</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MainProgram_GUI.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
